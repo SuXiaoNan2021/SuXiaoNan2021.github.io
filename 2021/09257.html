@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Hello World, 博客">
+    <meta name="keywords" content="博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Hello World | 博客</title>
+    <title>博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -311,12 +311,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Hello World</h1>
+                    <h1 class="description center-align post-title"></h1>
                 </div>
             </div>
         </div>
@@ -444,7 +444,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-09-24
+                    2021-09-25
                 </div>
                 
 
@@ -458,14 +458,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    86
+                    432
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    2 分
                 </div>
                 
 
@@ -485,23 +485,131 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre class=" language-bash"><code class="language-bash">$ hexo new <span class="token string">"My New Post"</span>
+                <p>docker-compose部署ElasticSearch集群</p>
+<p><img src="https://zysite.top/upload/2021/04/logo-775ee8592a6b4875aa483a982c0be3c0.jpg" alt="img">81 次访问发布: 2021-06-16</p>
+<p> <a target="_blank" rel="noopener" href="https://zysite.top/categories/docker">· Docker</a></p>
+<h2 id="Elasticsearch-Compose-配置文件"><a href="#Elasticsearch-Compose-配置文件" class="headerlink" title="Elasticsearch Compose 配置文件"></a>Elasticsearch Compose 配置文件</h2><p>创建一个 docker-compose.yml 内容如下：</p>
+<pre class=" language-yaml"><code class="language-yaml"><span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token string">'2.2'</span>
+<span class="token key atrule">services</span><span class="token punctuation">:</span>
+  <span class="token key atrule">es01</span><span class="token punctuation">:</span>
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> docker.elastic.co/elasticsearch/elasticsearch<span class="token punctuation">:</span>7.10.1
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> es01
+    <span class="token key atrule">environment</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> node.name=es01
+      <span class="token punctuation">-</span> cluster.name=es<span class="token punctuation">-</span>docker<span class="token punctuation">-</span>cluster
+      <span class="token punctuation">-</span> discovery.seed_hosts=es02<span class="token punctuation">,</span>es03
+      <span class="token punctuation">-</span> cluster.initial_master_nodes=es01<span class="token punctuation">,</span>es02<span class="token punctuation">,</span>es03
+      <span class="token punctuation">-</span> bootstrap.memory_lock=true
+      <span class="token punctuation">-</span> <span class="token string">"ES_JAVA_OPTS=-Xms512m -Xmx512m"</span>
+    <span class="token key atrule">ulimits</span><span class="token punctuation">:</span>
+      <span class="token key atrule">memlock</span><span class="token punctuation">:</span>
+        <span class="token key atrule">soft</span><span class="token punctuation">:</span> <span class="token number">-1</span>
+        <span class="token key atrule">hard</span><span class="token punctuation">:</span> <span class="token number">-1</span>
+    <span class="token key atrule">volumes</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> ./es01/data<span class="token punctuation">:</span>/usr/share/elasticsearch/data
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> 9200<span class="token punctuation">:</span><span class="token number">9200</span>
+    <span class="token key atrule">networks</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> elastic
+
+  <span class="token key atrule">es02</span><span class="token punctuation">:</span>
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> docker.elastic.co/elasticsearch/elasticsearch<span class="token punctuation">:</span>7.10.1
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> es02
+    <span class="token key atrule">environment</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> node.name=es02
+      <span class="token punctuation">-</span> cluster.name=es<span class="token punctuation">-</span>docker<span class="token punctuation">-</span>cluster
+      <span class="token punctuation">-</span> discovery.seed_hosts=es01<span class="token punctuation">,</span>es03
+      <span class="token punctuation">-</span> cluster.initial_master_nodes=es01<span class="token punctuation">,</span>es02<span class="token punctuation">,</span>es03
+      <span class="token punctuation">-</span> bootstrap.memory_lock=true
+      <span class="token punctuation">-</span> <span class="token string">"ES_JAVA_OPTS=-Xms512m -Xmx512m"</span>
+    <span class="token key atrule">ulimits</span><span class="token punctuation">:</span>
+      <span class="token key atrule">memlock</span><span class="token punctuation">:</span>
+        <span class="token key atrule">soft</span><span class="token punctuation">:</span> <span class="token number">-1</span>
+        <span class="token key atrule">hard</span><span class="token punctuation">:</span> <span class="token number">-1</span>
+    <span class="token key atrule">volumes</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> ./es02/data<span class="token punctuation">:</span>/usr/share/elasticsearch/data
+    <span class="token key atrule">networks</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> elastic
+
+  <span class="token key atrule">es03</span><span class="token punctuation">:</span>
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> docker.elastic.co/elasticsearch/elasticsearch<span class="token punctuation">:</span>7.10.1
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> es03
+    <span class="token key atrule">environment</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> node.name=es03
+      <span class="token punctuation">-</span> cluster.name=es<span class="token punctuation">-</span>docker<span class="token punctuation">-</span>cluster
+      <span class="token punctuation">-</span> discovery.seed_hosts=es01<span class="token punctuation">,</span>es02
+      <span class="token punctuation">-</span> cluster.initial_master_nodes=es01<span class="token punctuation">,</span>es02<span class="token punctuation">,</span>es03
+      <span class="token punctuation">-</span> bootstrap.memory_lock=true
+      <span class="token punctuation">-</span> <span class="token string">"ES_JAVA_OPTS=-Xms512m -Xmx512m"</span>
+    <span class="token key atrule">ulimits</span><span class="token punctuation">:</span>
+      <span class="token key atrule">memlock</span><span class="token punctuation">:</span>
+        <span class="token key atrule">soft</span><span class="token punctuation">:</span> <span class="token number">-1</span>
+        <span class="token key atrule">hard</span><span class="token punctuation">:</span> <span class="token number">-1</span>
+    <span class="token key atrule">volumes</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> ./es03/data<span class="token punctuation">:</span>/usr/share/elasticsearch/data
+    <span class="token key atrule">networks</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> elastic
+
+  <span class="token key atrule">kib01</span><span class="token punctuation">:</span>
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> docker.elastic.co/kibana/kibana<span class="token punctuation">:</span>7.10.1
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> kib01
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> 5601<span class="token punctuation">:</span><span class="token number">5601</span>
+    <span class="token key atrule">environment</span><span class="token punctuation">:</span>
+      <span class="token key atrule">ELASTICSEARCH_URL</span><span class="token punctuation">:</span> http<span class="token punctuation">:</span>//es01<span class="token punctuation">:</span><span class="token number">9200</span>
+      <span class="token key atrule">ELASTICSEARCH_HOSTS</span><span class="token punctuation">:</span> <span class="token string">'["http://es01:9200","http://es02:9200","http://es03:9200"]'</span>
+    <span class="token key atrule">networks</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> elastic
+
+<span class="token key atrule">volumes</span><span class="token punctuation">:</span>
+  <span class="token key atrule">data01</span><span class="token punctuation">:</span>
+    <span class="token key atrule">driver</span><span class="token punctuation">:</span> local
+  <span class="token key atrule">data02</span><span class="token punctuation">:</span>
+    <span class="token key atrule">driver</span><span class="token punctuation">:</span> local
+  <span class="token key atrule">data03</span><span class="token punctuation">:</span>
+    <span class="token key atrule">driver</span><span class="token punctuation">:</span> local
+
+<span class="token key atrule">networks</span><span class="token punctuation">:</span>
+  <span class="token key atrule">elastic</span><span class="token punctuation">:</span>
+    <span class="token key atrule">driver</span><span class="token punctuation">:</span> bridge
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre class=" language-bash"><code class="language-bash">$ hexo server
+<p>事先创建如下数据挂载目录：</p>
+<pre class=" language-shell"><code class="language-shell">├── es01
+│   └── data
+├── es02
+│   └── data
+└── es03
+    └── data
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre class=" language-bash"><code class="language-bash">$ hexo generate
+<p>并且设置权限：</p>
+<pre class=" language-shell"><code class="language-shell">chmod -R 777 es01 es02 es03
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre class=" language-bash"><code class="language-bash">$ hexo deploy
+<p>执行 <code>docker-compose up -d</code>启动。</p>
+<h2 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h2><h3 id="文件权限"><a href="#文件权限" class="headerlink" title="文件权限"></a>文件权限</h3><p>报错如下：</p>
+<pre class=" language-shell"><code class="language-shell">AccessDeniedException[/usr/share/elasticsearch/data/nodes]
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-<h3 id="create-new-blog"><a href="#create-new-blog" class="headerlink" title="create new blog"></a>create new blog</h3><pre class=" language-bash"><code class="language-bash">$ hexo n <span class="token string">"我的博客"</span>
+<p>提前将挂载目录创建好，并将权限设置好：</p>
+<pre class=" language-shell"><code class="language-shell">chmod -R 777 es01 es02 es03
 </code></pre>
-<h3 id="publish"><a href="#publish" class="headerlink" title="publish"></a>publish</h3><pre class=" language-bash"><code class="language-bash">$ hexo g -d
+<h3 id="内存不足"><a href="#内存不足" class="headerlink" title="内存不足"></a>内存不足</h3><p>报错如下：</p>
+<pre class=" language-shell"><code class="language-shell">max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]
 </code></pre>
+<p>修改配置文件：</p>
+<pre class=" language-shell"><code class="language-shell">vi /etc/sysctl.conf
+</code></pre>
+<p>在文件末尾添加一行内容：</p>
+<pre class=" language-shell"><code class="language-shell">vm.max_map_count=262144
+</code></pre>
+<p>执行以下命令立即生效：</p>
+<pre class=" language-shell"><code class="language-shell">/sbin/sysctl -p
+</code></pre>
+<p>之后重新启动即可。</p>
+<p><a target="_blank" rel="noopener" href="https://zysite.top/archives/elasticsearch-docker-compose-install#thJDAbSF">Elasticsearch Compose 配置文件</a><a target="_blank" rel="noopener" href="https://zysite.top/archives/elasticsearch-docker-compose-install#MWZcQHbh">错误</a><a target="_blank" rel="noopener" href="https://zysite.top/archives/elasticsearch-docker-compose-install#jcQDmkft">文件权限</a><a target="_blank" rel="noopener" href="https://zysite.top/archives/elasticsearch-docker-compose-install#DSfGQZYj">内存不足</a></p>
+<blockquote>
+<p><strong>Copyright:</strong> 采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by/4.0/">知识共享署名4.0</a> 国际许可协议进行许可</p>
+<p><strong>Links:</strong> <a target="_blank" rel="noopener" href="https://zysite.top/archives/elasticsearch-docker-compose-install">https://zysite.top/archives/elasticsearch-docker-compose-install</a></p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://zysite.top/tags/docker"># Docker</a><a target="_blank" rel="noopener" href="https://zysite.top/tags/elasticsearch"># Elasticsearch</a></p>
 
                 
             </div>
@@ -528,7 +636,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://SuXiaoNan2021.github.io/2021/092416108.html">https://SuXiaoNan2021.github.io/2021/092416108.html</a>
+                    <a href="https://SuXiaoNan2021.github.io/2021/09257.html">https://SuXiaoNan2021.github.io/2021/09257.html</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -737,7 +845,7 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2021/09253.html">
+                <a href="/2021/092515.html">
                     <div class="card-image">
                         
                         
@@ -771,16 +879,16 @@
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="far fa-dot-circle"></i>
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/092416108.html">
+                <a href="/2021/09254.html">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="Hello World">
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="">
                         
-                        <span class="card-title">Hello World</span>
+                        <span class="card-title"></span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -791,7 +899,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-09-24
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-09-25
                             </span>
                         <span class="publish-author">
                             
@@ -801,7 +909,6 @@
                         </span>
                     </div>
                 </div>
-
                 
             </div>
         </div>

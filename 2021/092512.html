@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Hello World, 博客">
+    <meta name="keywords" content="博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Hello World | 博客</title>
+    <title>博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -311,12 +311,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Hello World</h1>
+                    <h1 class="description center-align post-title"></h1>
                 </div>
             </div>
         </div>
@@ -444,7 +444,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-09-24
+                    2021-09-25
                 </div>
                 
 
@@ -458,14 +458,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    86
+                    3.4k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    16 分
                 </div>
                 
 
@@ -485,23 +485,377 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre class=" language-bash"><code class="language-bash">$ hexo new <span class="token string">"My New Post"</span>
+                <p>5分钟搞定Linux安装Mysql5.7（简单快捷，建议收藏）</p>
+<p>本文记录下我近期在Linux环境下安装Mysql5.7的实践经历。<br>服务器版本   Mysql版本<br>Centos 7.6  5.7.32</p>
+<ol>
+<li>下载Mysql</li>
+</ol>
+<p>下载地址：<a target="_blank" rel="noopener" href="https://downloads.mysql.com/archives/community/">https://downloads.mysql.com/archives/community/</a><br>进入页面后选择你需要的版本进行下载，这里提供了2种格式：tar.gz和tar。</p>
+<p>如果下载不方便，可以直接从我的网盘里面下载，版本是Mysql5.7.32-64位 tar.gz格式：</p>
+<pre><code>链接: https://pan.baidu.com/s/186JhvA9zumiTqVQ5Ne3bKQ 提取码: n5uy
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre class=" language-bash"><code class="language-bash">$ hexo server
+<p>下载完成之后，传到linux服务器的指定目录下：<br>2. 解压</p>
+<pre><code>1 tar -zxvf mysql-5.7.32-linux-glibc2.12-x86_64.tar.gz -C /usr/local
+2 mv /usr/local mysql-5.7.32-linux-glibc2.12-x86_64 /usr/local/mysql # 重命名为mysql
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre class=" language-bash"><code class="language-bash">$ hexo generate
+<p>将其解压到指定路径，并且通过mv命令修改名字为mysql。<br>3. 创建用户和组</p>
+<pre><code>1 groupadd mysql
+
+1 useradd -r -g mysql mysql
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre class=" language-bash"><code class="language-bash">$ hexo deploy
+<ol start="4">
+<li><p>将安装目录所有者及所属组改为mysql</p>
+<p> chown -R mysql.mysql /usr/local/mysql</p>
+<p> chown -R mysql:mysql /var/data </p>
+<p> chmod -R 755 /usr/local/mysql/data</p>
+</li>
+</ol>
+<ol start="5">
+<li>创建data文件夹</li>
+</ol>
+<pre><code>1 mkdir /usr/local/mysql/data   # data文件夹用于存放数据库表之类的数据
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-<h3 id="create-new-blog"><a href="#create-new-blog" class="headerlink" title="create new blog"></a>create new blog</h3><pre class=" language-bash"><code class="language-bash">$ hexo n <span class="token string">"我的博客"</span>
+<ol start="6">
+<li>初始化</li>
+</ol>
+<p>安装依赖包<br>mysql-bin.log </p>
+<pre><code>1 yum install libaio
 </code></pre>
-<h3 id="publish"><a href="#publish" class="headerlink" title="publish"></a>publish</h3><pre class=" language-bash"><code class="language-bash">$ hexo g -d
+<p>初始化</p>
+<pre><code>1 /usr/local/mysql/bin/mysqld --user=mysql --basedir=/usr/local/mysql/ --datadir=/usr/local/mysql/data --initialize
+或者(路径可配置)
+2 /usr/local/mysql/bin/mysqld --user=mysql --basedir=/usr/local/mysql/ --datadir=/opt/data/mysql/data --initialize
+
+初始化完成之后会出现一个初始的密码，一定要记住！例如。 51%xoKjwaW
 </code></pre>
+<ol start="7">
+<li><p>修改配置文件</p>
+<p> 1 vim /etc/my.cnf</p>
+</li>
+</ol>
+<p>配置文件内容（可直接copy）：</p>
+<pre><code>[mysqld]
+
+#data文件路径
+
+datadir=/opt/data/mysql/data
+port=3306
+user=mysql
+character-set-server=utf8
+collation-server=utf8_general_ci
+character_set_server=utf8
+init_connect=&#39;SET NAMES utf8&#39;
+#relay_log配置中继日志
+relay_log=edu-mysql-relay-bin  
+server-id=1
+#log-bin=/opt/data/mysql/data/binlog/mysql-bin.log
+log-bin=mysql-bin
+max_binlog_size = 1000M 
+binlog-format = row  
+slow_query_log=1
+long_query_time=2
+log_queries_not_using_indexes=1
+log-error=/opt/data/mysql/data/logs/mysql_error.log
+symbolic-links=0
+
+#注意mysql5.7以上会报错,解决办法参考问题1
+
+default_time_zone=Asia/Shanghai
+
+[mysqld_safe]
+
+#日志文件路径
+
+#log-error=/opt/data/mysql/logs/mysqld.log
+#pid-file=/opt/data/mysql/mysqld.pid
+user=mysql
+log-error=/opt/data/mysql/data/logs/mysqld.log
+pid-file=/opt/data/mysql/data/mysqld.pid
+</code></pre>
+<p>问题1:解决增加时区报错解决方法</p>
+<pre><code>到https://dev.mysql.com/downloads/timezones.html下载时区文件
+如果你的mysql版本是5.7及以下，下载上图第一个红框中的文件
+如果你的mysql是5.7以上，下载上图第二个红框中的文件
+timezone_2021a_posix_sql.zip
+上传到服务器,进行解压
+mysql -u root -p密码
+use mysql;
+source 路径\timezone_posix.sql
+然后执行语句
+
+SET GLOBAL time_zone = &#39;Asia/Shanghai&#39;;
+</code></pre>
+<ol start="8">
+<li><p>将mysql加入到系统服务中</p>
+<p> 1 cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql</p>
+</li>
+<li><p>开机启动</p>
+<p> 1 chkconfig mysql on</p>
+</li>
+<li><p>启动mysql</p>
+<p>1 service mysql start</p>
+</li>
+<li><p>登陆mysql</p>
+<p>1 /usr/local/mysql/bin/mysql -uroot -p</p>
+</li>
+</ol>
+<p>密码是之前初始化完出现的，在这里输入后登陆。<br>12. 修改密码</p>
+<p>设置远程访问权限并修改密码</p>
+<pre><code>1 alter user user() identified by &quot;123456&quot;;
+
+1 GRANT ALL PRIVILEGES ON *.* TO &#39;root&#39;@&#39;%&#39; IDENTIFIED BY &#39;123456&#39;
+</code></pre>
+<ol start="13">
+<li>配置系统变量</li>
+</ol>
+<p>将mysql加入系统变量：</p>
+<pre><code>1 vim /etc/profile
+
+1 export PATH=$PATH:/usr/local/mysql/bin
+1 export PATH=$PATH:/usr/local/mysql/lib
+</code></pre>
+<p>完成后按ESC输入 :wq 保存退出，并输入下面的命令使配置生效：</p>
+<pre><code>1 source /etc/profile
+</code></pre>
+<p>再登陆看看：</p>
+<pre><code>1 mysql -u root -p
+</code></pre>
+<p>结束</p>
+<pre><code>如果连不上,查看防火墙端口问题
+telent 192.168.1.1:2306
+开放此端口,
+
+或者禁用防火墙 
+
+
+
+命令:
+         查看防火墙状态 systemctl status firewalld
+         开启防火墙 systemctl start firewalld  
+         关闭防火墙 systemctl stop firewalld
+         开启防火墙 service firewalld start 
+         若遇到无法开启
+         先用：systemctl unmask firewalld.service 
+         然后：systemctl start firewalld.service
+开放指定端口 firewall-cmd --zone=public --add-port=1935/tcp --permanent
+查询已开放的端口 netstat  -ntulp | grep 端口号：可以具体查看某一个端口号
+netstat -ntulp |grep 1935   //查看所有1935端口使用情况·
+查询指定端口是否已开 firewall-cmd --query-port=666/tcp
+提示 yes，表示开启；no表示未开启。
+</code></pre>
+<h1 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h1><p>则需要在备用节点参考此部署方法部署一次<br>然后修改主库</p>
+<pre><code>vim /etc/my.cnf
+
+[mysqld]
+#主数据库端ID号
+server_id = 192   
+#配置编码为utf8
+character_set_server=utf8mb4
+init_connect=&#39;SET NAMES utf8mb4&#39;   
+#设置mysql大小写不敏感
+lower_case_table_names=1  
+#relay_log配置中继日志
+relay_log=edu-mysql-relay-bin  
+ #开启二进制日志                  
+log-bin = mysql-bin    
+#需要复制的数据库名，如果复制多个数据库，重复设置这个选项即可，注释掉则默认全部               
+binlog-do-db = db   
+#忽略需要复制的数据库
+binlog-ignore-db=mysql  
+#将从服务器从主服务器收到的更新记入到从服务器自己的二进制日志文件中                 
+log-slave-updates                        
+#控制binlog的写入频率。每执行多少次事务写入一次(这个参数性能消耗很大，但可减小MySQL崩溃造成的损失) 
+sync_binlog = 1  
+#为每个session分配的内存，在事物过程中用来存储二进制日志的缓存
+binlog_cache_log=1M                  
+#这个参数一般用在主主同步中，用来错开自增值, 防止键值冲突
+auto_increment_offset = 1           
+#这个参数一般用在主主同步中，用来错开自增值, 防止键值冲突
+auto_increment_increment = 1            
+#二进制日志自动删除的天数，默认值为0,表示“没有自动删除”，启动时和二进制日志循环时可能删除  
+expire_logs_days = 7                    
+#将函数复制到slave  
+log_bin_trust_function_creators = true
+</code></pre>
+<p>从库</p>
+<pre><code>1 vim /etc/my.cnf
+[mysqld]
+server_id = 2
+#配置编码为utf8
+character_set_server=utf8mb4
+init_connect=&#39;SET NAMES utf8mb4&#39;
+#relay_log配置中继日志
+relay_log=edu-mysql-relay-bin  
+log-bin = mysql-bin
+log-slave-updates
+sync_binlog = 0
+#log buffer将每秒一次地写入log file中，并且log file的flush(刷到磁盘)操作同时进行。该模式下在事务提交的时候，不会主动触发写入磁盘的操作
+innodb_flush_log_at_trx_commit = 0 
+#忽略需要复制的数据库   
+binlog-ignore-db=information_schema
+binlog-ignore-db=cluster
+binlog-ignore-db=mysql    
+#指定slave要复制哪个库
+#replicate-do-db = db         
+replicate_wild_do_table=test.%
+#或
+replicate_wild_ignore_table=mysql.%
+#MySQL主从复制的时候，当Master和Slave之间的网络中断，但是Master和Slave无法察觉的情况下（比如防火墙或者路由问题）。
+#Slave会等待slave_net_timeout设置的秒数后，才能认为网络出现故障，然后才会重连并且追赶这段时间主库的数据
+slave-net-timeout = 60    
+# 函数的同步                
+log_bin_trust_function_creators = true
+</code></pre>
+<p>配置mycat</p>
+<ol>
+<li><p>上传mycat和jdk1.8安装包<br>通过ftp工具上传mycat和jdk1.8安装包至/application目录。</p>
+<p>   mkdir /application/<br>   cd /application/</p>
+</li>
+</ol>
+<ol start="2">
+<li><p>安装配置jdk（略）<br>可参考地址：<a target="_blank" rel="noopener" href="https://blog.csdn.net/xzm5708796/article/details/83268136">https://blog.csdn.net/xzm5708796/article/details/83268136</a></p>
+</li>
+<li><p>解压mycat并配置环境变量</p>
+<p>   tar -xzvf Mycat-web-linux.tar.gz<br>   echo “export PATH=/application/mycat/bin:$PATH”&gt;&gt;/etc/profile<br>   source  /etc/profile</p>
+</li>
+</ol>
+<p>或者<br>     vim /etc/profile</p>
+<pre><code> export MYCAT_HOME=$PATH:/usr/local/mycat
+ export PATH=$PATH:$MACAT_HOME/bin
+ source /etc/profile
+</code></pre>
+<ol start="4">
+<li>创建用户<br>举例：在master1上创建两个数据库用户,rep用户用来写入，rep_r用来读。</li>
+</ol>
+<pre><code>mysql -uroot -p
+
+输入密码
+
+注意：生产环境要尽量减小权限！
+
+mysql&gt; CREATE USER &#39;rep&#39;@&#39;%&#39; IDENTIFIED BY &#39;123456&#39;;
+mysql&gt; CREATE USER &#39;rep_r&#39;@&#39;%&#39; IDENTIFIED BY &#39;123456&#39;;
+mysql&gt; GRANT ALL PRIVILEGES ON *.* TO &#39;rep&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;123456&#39;;
+mysql&gt; GRANT ALL PRIVILEGES ON *.* TO &#39;rep_r&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;123456&#39;;
+mysql&gt; GRANT ALL PRIVILEGES ON *.* TO &#39;rep&#39;@&#39;%&#39; IDENTIFIED BY &#39;123456&#39;;
+mysql&gt; GRANT ALL PRIVILEGES ON *.* TO &#39;rep_r&#39;@&#39;%&#39; IDENTIFIED BY &#39;123456&#39;;
+mysql&gt; flush privileges;
+</code></pre>
+<ol start="5">
+<li>修改server.xml文件<pre><code>cd /application/mycat/conf/
+vi server.xml
+</code></pre>
+</li>
+</ol>
+<pre><code># 进入容器
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!-- - - Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); 
+ - you may not use this file except in compliance with the License. - You 
+ may obtain a copy of the License at - - http://www.apache.org/licenses/LICENSE-2.0 
+ - - Unless required by applicable law or agreed to in writing, software - 
+ distributed under the License is distributed on an &quot;AS IS&quot; BASIS, - WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. - See the 
+ License for the specific language governing permissions and - limitations 
+under the License. --&gt;
+&lt;!DOCTYPE mycat:server SYSTEM &quot;server.dtd&quot;&gt;
+&lt;mycat:server xmlns:mycat=&quot;http://org.opencloudb/&quot;&gt;
+&lt;system&gt;
+&lt;property name=&quot;defaultSqlParser&quot;&gt;druidparser&lt;/property&gt;
+&lt;property name=&quot;charset&quot;&gt;utf8mb4&lt;/charset&gt;
+      &lt;!--  &lt;property name=&quot;useCompression&quot;&gt;1&lt;/property&gt;--&gt; &lt;!--1为开启mysql压缩协议--&gt;
+&lt;!-- &lt;property name=&quot;processorBufferChunk&quot;&gt;40960&lt;/property&gt; --&gt;
+ &lt;!-- 
+ &lt;property name=&quot;processors&quot;&gt;1&lt;/property&gt; 
+ &lt;property name=&quot;processorExecutor&quot;&gt;32&lt;/property&gt; 
+--&gt;
+&lt;!--默认是65535 64K 用于sql解析时最大文本长度 --&gt;
+&lt;!--&lt;property name=&quot;maxStringLiteralLength&quot;&gt;65535&lt;/property&gt;--&gt;
+&lt;!--&lt;property name=&quot;sequnceHandlerType&quot;&gt;0&lt;/property&gt;--&gt;
+&lt;!--&lt;property name=&quot;backSocketNoDelay&quot;&gt;1&lt;/property&gt;--&gt;
+&lt;!--&lt;property name=&quot;frontSocketNoDelay&quot;&gt;1&lt;/property&gt;--&gt;
+&lt;!--&lt;property name=&quot;processorExecutor&quot;&gt;16&lt;/property&gt;--&gt;
+  &lt;!-- 
+&lt;property name=&quot;mutiNodeLimitType&quot;&gt;1&lt;/property&gt; 0：开启小数量级（默认） ；1：开启亿级数据排序
+&lt;property name=&quot;mutiNodePatchSize&quot;&gt;100&lt;/property&gt; 亿级数量排序批量
+   &lt;property name=&quot;processors&quot;&gt;32&lt;/property&gt; &lt;property name=&quot;processorExecutor&quot;&gt;32&lt;/property&gt; 
+   &lt;property name=&quot;serverPort&quot;&gt;8066&lt;/property&gt; &lt;property name=&quot;managerPort&quot;&gt;9066&lt;/property&gt; 
+   &lt;property name=&quot;idleTimeout&quot;&gt;300000&lt;/property&gt; &lt;property name=&quot;bindIp&quot;&gt;0.0.0.0&lt;/property&gt; 
+&lt;property name=&quot;frontWriteQueueSize&quot;&gt;4096&lt;/property&gt; &lt;property name=&quot;processors&quot;&gt;32&lt;/property&gt; --&gt;
+&lt;/system&gt;
+&lt;!--#注：配置写入用户和数据库，这里配置的数据库名为sky(schema中配置的虚拟数据库名字)，生产环境根据实际情况配置，多个库用逗号隔开。--&gt;
+&lt;user name=&quot;root&quot;&gt;
+&lt;property name=&quot;password&quot;&gt;123456&lt;/property&gt;
+&lt;property name=&quot;schemas&quot;&gt;sky&lt;/property&gt;
+&lt;/user&gt;
+&lt;!--#下面配置只读用户和数据库。--&gt;
+&lt;user name=&quot;dev&quot;&gt;
+&lt;property name=&quot;password&quot;&gt;123456&lt;/property&gt;
+&lt;property name=&quot;schemas&quot;&gt;sky&lt;/property&gt;
+&lt;property name=&quot;readOnly&quot;&gt;true&lt;/property&gt;
+&lt;/user&gt;
+
+&lt;/mycat:server&gt;
+</code></pre>
+<ol start="6">
+<li>修改schema.xml文件<br> vi schema.xml</li>
+</ol>
+<pre><code>&lt;?xml version=&quot;1.0&quot;?&gt;
+   &lt;!DOCTYPE mycat:schema SYSTEM &quot;schema.dtd&quot;&gt;
+    &lt;mycat:schema xmlns:mycat=&quot;http://org.opencloudb/&quot; &gt;
+    
+            &lt;schema name=&quot;sky&quot; checkSQLschema=&quot;true&quot; sqlMaxLimit=&quot;100&quot;&gt;
+                    &lt;table name=&quot;travelrecord&quot; dataNode=&quot;dn1&quot; rule=&quot;auto-sharding-long&quot; /&gt;
+            &lt;/schema&gt;
+            &lt;dataNode name=&quot;dn1&quot; dataHost=&quot;ieshost&quot; database=&quot;ies&quot; /&gt;
+           &lt;dataHost name=&quot;ieshost&quot; maxCon=&quot;1000&quot; minCon=&quot;10&quot; balance=&quot;3&quot;
+                  writeType=&quot;0&quot; dbType=&quot;mysql&quot; dbDriver=&quot;jdbc&quot; switchType=&quot;1&quot;  slaveThreshold=&quot;100&quot;&gt;
+                   &lt;heartbeat&gt;select user()&lt;/heartbeat&gt;
+                  &lt;writeHost host=&quot;master&quot; url=&quot;jdbc:mysql://192.168.1.253:3339?useSSL=false&amp;amp;characterEncoding=utf8&amp;amp;serverTimezone=GMT%2B8&quot; user=&quot;root    &quot;
+                           password=&quot;123456&quot;&gt;
+                         &lt;readHost host=&quot;slave&quot; url=&quot;jdbc:mysql://192.168.1.253:3340?useSSL=false&amp;amp;characterEncoding=utf8&amp;amp;serverTimezone=GMT%2B8&quot; user    =&quot;dev&quot; password=&quot;123456&quot; /&gt;
+                  &lt;/writeHost&gt;
+                 &lt;writeHost host=&quot;slave&quot; url=&quot;jdbc:mysql://192.168.1.253:3339?useSSL=false&amp;amp;characterEncoding=utf8&amp;amp;serverTimezone=GMT%2B8&quot; user=&quot;dev&quot;
+                          password=&quot;123456&quot; /&gt;
+          &lt;/dataHost&gt;
+  &lt;/mycat:schema&gt;
+</code></pre>
+<p>  注意：当多个从节点时，需配置多个读写内容信息</p>
+<p>说明：</p>
+<pre><code>Balance：
+1、balance=0  不开启读写分离机制，所有读操作都发送到当前可用的writehost了 .
+2、balance=1  全部的readhost与stand by writeHost 参与select语句的负载均衡。简单的说，双主双从模式(M1àS1,M2àS2，并且M1和M2互为主备)，正常情况下，M1，S1，S2都参与select语句的复杂均衡。
+3、balance=2  所有读操作都随机的在readhost和writehost上分发
+writeType ：
+负载均衡类型，目前的取值有3种：
+1、writeType=”0″, 所有写操作发送到配置的第一个writeHost。
+2、writeType=”1″，所有写操作都随机的发送到配置的writeHost。
+3、writeType=”2″，不执行写操作。
+switchType ：
+1、switchType=-1 表示不自动切换
+2、switchType=1 默认值，自动切换
+3、switchType=2 基于MySQL 主从同步的状态决定是否切换
+
+7. 启动mycat
+   mycat start
+   cd /application/mycat/logs/;cat wrapper.log
+
+看到如下内容证明启动成功
+
+
+八、验证
+我们采用第三方工具的方式进行连接验证
+
+1. 使用navicat连接mycat
+   测试只读用户
+   测试写入用户
+</code></pre>
+<h1 id="data文件路径"><a href="#data文件路径" class="headerlink" title="data文件路径"></a>data文件路径</h1><p>server-id=2<br>log-bin=mysql-bin #日志文件同步方式<br>binlog_do_db=test #同步数据库，注释的话，默认全部</p>
+<p>重启数据库service mysql restart<br>进入master数据库执行，查看二进制文件和行数<br>sql&gt;show master status<br>登录slave数据库<br>sql&gt;change master to master_host=’198.1.1.2’,master_port=3306,master_user=’root’,master_password=’123456’,master_log_file=’mysql-bin.0002’,master_log_pos=216<br>sql&gt;start slave<br>执行 查看<br>sql&gt;show slave status;</p>
+<hr>
+<p>Slave_IO_Runing:yes<br>Slave_sql_Runing:yes<br>即表示成功<br>然后在分别在主库增加数据看从库是否同步<br>如果出现uuid的错误<br>在slave服务器上输入命令<br>cat /etc/my.cnf<br>查看datadir配置的目录<br>进入datadir配置的目录<br>cd ·······<br>然后看目录下是否存在auto.cnf目录<br>删除目录<br>rm -rf auto.cnf<br>重启数据库service mysql restart</p>
+<p>以上就是Mysql5.7在linux服务器上安装部署的全部内容了，按照这个教程你可以快速搭建出一套mysql环境，有需要的小伙伴建议你收藏起来，备用。<br>————————————————<br>版权声明：本文为CSDN博主「程序员青戈」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/xqnode/article/details/113652931">https://blog.csdn.net/xqnode/article/details/113652931</a></p>
+<p>[mysqld]</p>
+<h1 id="data文件路径-1"><a href="#data文件路径-1" class="headerlink" title="data文件路径"></a>data文件路径</h1><p>#datadir=/usr/local/mysql/data<br>datadir=/opt/data/mysql/data<br>port=3306<br>user=mysql<br>character-set-server=utf8<br>collation-server=utf8_general_ci<br>server-id=1<br>log-bin=mysql-bin.log<br>max_binlog_size = 1000M<br>binlog-format = row<br>slow_query_log=1<br>long_query_time=2<br>log_queries_not_using_indexes=1<br>log-error=/opt/data/mysql/data/logs/mysql_error.log<br>symbolic-links=0<br>default_time_zone=Asia/Shanghai<br>max_connections = 1500</p>
 
                 
             </div>
@@ -528,7 +882,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://SuXiaoNan2021.github.io/2021/092416108.html">https://SuXiaoNan2021.github.io/2021/092416108.html</a>
+                    <a href="https://SuXiaoNan2021.github.io/2021/092512.html">https://SuXiaoNan2021.github.io/2021/092512.html</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -737,7 +1091,7 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2021/09253.html">
+                <a href="/2021/092513.html">
                     <div class="card-image">
                         
                         
@@ -771,16 +1125,16 @@
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="far fa-dot-circle"></i>
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/092416108.html">
+                <a href="/2021/09256.html">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="Hello World">
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="">
                         
-                        <span class="card-title">Hello World</span>
+                        <span class="card-title"></span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -791,7 +1145,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-09-24
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-09-25
                             </span>
                         <span class="publish-author">
                             
@@ -801,7 +1155,6 @@
                         </span>
                     </div>
                 </div>
-
                 
             </div>
         </div>

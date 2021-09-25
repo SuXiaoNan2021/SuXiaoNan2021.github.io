@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Hello World, 博客">
+    <meta name="keywords" content="博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Hello World | 博客</title>
+    <title>博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -311,12 +311,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Hello World</h1>
+                    <h1 class="description center-align post-title"></h1>
                 </div>
             </div>
         </div>
@@ -444,7 +444,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-09-24
+                    2021-09-25
                 </div>
                 
 
@@ -458,14 +458,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    86
+                    4.1k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    18 分
                 </div>
                 
 
@@ -485,23 +485,461 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre class=" language-bash"><code class="language-bash">$ hexo new <span class="token string">"My New Post"</span>
+                <h2 id="创建目录及配置文件"><a href="#创建目录及配置文件" class="headerlink" title="创建目录及配置文件"></a>创建目录及配置文件</h2><p>创建目录结构如下，之后用于挂载数据卷：</p>
+<pre class=" language-shell"><code class="language-shell">├── master
+│   ├── conf
+│   └── data
+├── slaver0
+│   ├── conf
+│   └── data
+└── slaver1
+    ├── conf
+    └── data
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre class=" language-bash"><code class="language-bash">$ hexo server
+<p>进入<code>./master/conf</code>目录，创建文件<code>vi my.cnf</code>，内容如下：</p>
+<pre class=" language-shell"><code class="language-shell">[mysqld]
+# 集群服务器id，不可重复
+server-id = 1
+# 同步(binlog)文件名称
+log-bin = mysql-bin
+#注意mysql5.7以上会报错,解决办法参考问题1
+default_time_zone=Asia/Shanghai
+# 1055异常处理
+sql-mode="STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,NO_ZERO_DATE,NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO"
+#配置编码为utf8
+character_set_server=utf8mb4
+init_connect='SET NAMES utf8mb4'   
+#relay_log配置中继日志
+relay_log=edu-mysql-relay-bin  
+#设置mysql大小写不敏感
+lower_case_table_names=1  
+ #开启二进制日志                  
+log-bin = mysql-bin    
+#需要复制的数据库名，如果复制多个数据库，重复设置这个选项即可，注释掉则默认全部               
+binlog-do-db = db   
+#忽略需要复制的数据库
+binlog-ignore-db=mysql  
+#将从服务器从主服务器收到的更新记入到从服务器自己的二进制日志文件中                 
+log-slave-updates                        
+#控制binlog的写入频率。每执行多少次事务写入一次(这个参数性能消耗很大，但可减小MySQL崩溃造成的损失) 
+sync_binlog = 1  
+#为每个session分配的内存，在事物过程中用来存储二进制日志的缓存
+binlog_cache_log=1M                  
+#这个参数一般用在主主同步中，用来错开自增值, 防止键值冲突
+auto_increment_offset = 1           
+#这个参数一般用在主主同步中，用来错开自增值, 防止键值冲突
+auto_increment_increment = 1            
+#二进制日志自动删除的天数，默认值为0,表示“没有自动删除”，启动时和二进制日志循环时可能删除  
+expire_logs_days = 7                    
+#将函数复制到slave  
+log_bin_trust_function_creators = true
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre class=" language-bash"><code class="language-bash">$ hexo generate
+<p>进入<code>./slaver0/conf</code>目录，创建文件<code>vi my.cnf</code>，内容如下：</p>
+<pre class=" language-shell"><code class="language-shell">[mysqld]
+# 集群服务器id，不可重复
+server-id = 11
+#注意mysql5.7以上会报错,解决办法参考问题1
+default_time_zone=Asia/Shanghai
+# 1055异常处理
+sql-mode="STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,NO_ZERO_DATE,NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO"
+#配置编码为utf8
+character_set_server=utf8mb4
+init_connect='SET NAMES utf8mb4' 
+#relay_log配置中继日志
+relay_log=edu-mysql-relay-bin  
+#设置mysql大小写不敏感
+lower_case_table_names=1  
+ #开启二进制日志                  
+log-bin = mysql-bin    
+#需要复制的数据库名，如果复制多个数据库，重复设置这个选项即可，注释掉则默认全部               
+binlog-do-db = db   
+#忽略需要复制的数据库
+binlog-ignore-db=mysql  
+#将从服务器从主服务器收到的更新记入到从服务器自己的二进制日志文件中                 
+log-slave-updates                        
+#控制binlog的写入频率。每执行多少次事务写入一次(这个参数性能消耗很大，但可减小MySQL崩溃造成的损失) 
+sync_binlog = 1  
+#为每个session分配的内存，在事物过程中用来存储二进制日志的缓存
+binlog_cache_log=1M                  
+#这个参数一般用在主主同步中，用来错开自增值, 防止键值冲突
+auto_increment_offset = 1           
+#这个参数一般用在主主同步中，用来错开自增值, 防止键值冲突
+auto_increment_increment = 1            
+#二进制日志自动删除的天数，默认值为0,表示“没有自动删除”，启动时和二进制日志循环时可能删除  
+expire_logs_days = 7                    
+#将函数复制到slave  
+log_bin_trust_function_creators = true
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre class=" language-bash"><code class="language-bash">$ hexo deploy
+<p>进入<code>./slaver1/conf</code>目录，创建文件<code>vi my.cnf</code>，内容如下：</p>
+<pre class=" language-shell"><code class="language-shell">[mysqld]
+# 集群服务器id，不可重复
+server-id = 12
+#注意mysql5.7以上会报错,解决办法参考问题1
+default_time_zone=Asia/Shanghai
+# 1055异常处理
+sql-mode="STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,NO_ZERO_DATE,NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO"
+#配置编码为utf8
+character_set_server=utf8mb4
+init_connect='SET NAMES utf8mb4'   
+#relay_log配置中继日志
+relay_log=edu-mysql-relay-bin  
+#设置mysql大小写不敏感
+lower_case_table_names=1  
+ #开启二进制日志                  
+log-bin = mysql-bin    
+#需要复制的数据库名，如果复制多个数据库，重复设置这个选项即可，注释掉则默认全部               
+binlog-do-db = db   
+#忽略需要复制的数据库
+binlog-ignore-db=mysql  
+#将从服务器从主服务器收到的更新记入到从服务器自己的二进制日志文件中                 
+log-slave-updates                        
+#控制binlog的写入频率。每执行多少次事务写入一次(这个参数性能消耗很大，但可减小MySQL崩溃造成的损失) 
+sync_binlog = 1  
+#为每个session分配的内存，在事物过程中用来存储二进制日志的缓存
+binlog_cache_log=1M                  
+#这个参数一般用在主主同步中，用来错开自增值, 防止键值冲突
+auto_increment_offset = 1           
+#这个参数一般用在主主同步中，用来错开自增值, 防止键值冲突
+auto_increment_increment = 1            
+#二进制日志自动删除的天数，默认值为0,表示“没有自动删除”，启动时和二进制日志循环时可能删除  
+expire_logs_days = 7                    
+#将函数复制到slave  
+log_bin_trust_function_creators = true
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-<h3 id="create-new-blog"><a href="#create-new-blog" class="headerlink" title="create new blog"></a>create new blog</h3><pre class=" language-bash"><code class="language-bash">$ hexo n <span class="token string">"我的博客"</span>
+<p>问题1:解决增加时区报错解决方法</p>
+<pre><code>到https://dev.mysql.com/downloads/timezones.html下载时区文件
+如果你的mysql版本是5.7及以下，下载上图第一个红框中的文件
+如果你的mysql是5.7以上，下载上图第二个红框中的文件
+timezone_2021a_posix_sql.zip
+上传到服务器,进行解压
+mysql -u root -p密码
+use mysql;
+source 路径\timezone_posix.sql
+然后执行语句
+
+SET GLOBAL time_zone = &#39;Asia/Shanghai&#39;;
 </code></pre>
-<h3 id="publish"><a href="#publish" class="headerlink" title="publish"></a>publish</h3><pre class=" language-bash"><code class="language-bash">$ hexo g -d
+<h2 id="docker-compose-yml"><a href="#docker-compose-yml" class="headerlink" title="docker-compose.yml"></a>docker-compose.yml</h2><p>创建<code>docker-compose.yml</code>文件，内容如下：</p>
+<pre class=" language-yaml"><code class="language-yaml"><span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token string">'3'</span>
+<span class="token key atrule">services</span><span class="token punctuation">:</span>
+  <span class="token comment" spellcheck="true"># 主库</span>
+  <span class="token key atrule">mysql-master</span><span class="token punctuation">:</span>
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> <span class="token string">"mysql:5.7"</span>
+    <span class="token key atrule">restart</span><span class="token punctuation">:</span> always
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token string">"3306:3306"</span>
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> mysql<span class="token punctuation">-</span>master
+    <span class="token key atrule">environment</span><span class="token punctuation">:</span>
+       <span class="token key atrule">MYSQL_ROOT_PASSWORD</span><span class="token punctuation">:</span> <span class="token number">123456</span>
+    <span class="token key atrule">volumes</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> ./master/conf/my.cnf<span class="token punctuation">:</span>/etc/mysql/conf.d/mysql.cnf
+      <span class="token punctuation">-</span> ./master/data<span class="token punctuation">:</span>/var/lib/mysql
+  <span class="token comment" spellcheck="true"># 从库0</span>
+  <span class="token key atrule">mysql-slaver0</span><span class="token punctuation">:</span>
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> <span class="token string">"mysql:5.7"</span>
+    <span class="token key atrule">restart</span><span class="token punctuation">:</span> always
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token string">"3307:3306"</span>
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> mysql<span class="token punctuation">-</span>slaver0
+    <span class="token key atrule">environment</span><span class="token punctuation">:</span>
+       <span class="token key atrule">MYSQL_ROOT_PASSWORD</span><span class="token punctuation">:</span> <span class="token number">123456</span>
+    <span class="token key atrule">volumes</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> ./slaver0/conf/my.cnf<span class="token punctuation">:</span>/etc/mysql/conf.d/mysql.cnf
+      <span class="token punctuation">-</span> ./slaver0/data<span class="token punctuation">:</span>/var/lib/mysql
+  <span class="token comment" spellcheck="true"># 从库1</span>
+  <span class="token key atrule">mysql-slaver1</span><span class="token punctuation">:</span>
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> <span class="token string">"mysql:5.7"</span>
+    <span class="token key atrule">restart</span><span class="token punctuation">:</span> always
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token string">"3308:3306"</span>
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> mysql<span class="token punctuation">-</span>slaver1
+    <span class="token key atrule">environment</span><span class="token punctuation">:</span>
+       <span class="token key atrule">MYSQL_ROOT_PASSWORD</span><span class="token punctuation">:</span> <span class="token number">123456</span>
+    <span class="token key atrule">volumes</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> ./slaver1/conf/my.cnf<span class="token punctuation">:</span>/etc/mysql/conf.d/mysql.cnf
+      <span class="token punctuation">-</span> ./slaver1/data<span class="token punctuation">:</span>/var/lib/mysql
 </code></pre>
+<p>运行<code>docker-compose up -d</code>启动容器。</p>
+<h2 id="配置步骤"><a href="#配置步骤" class="headerlink" title="配置步骤"></a>配置步骤</h2><h3 id="主库"><a href="#主库" class="headerlink" title="主库"></a>主库</h3><p><code>docker exec -it mysql-master bash</code>进入主库，<code>mysql -u root -p 123456</code>进入<code>mysql</code>：</p>
+<p>创建用户 <code>slaver</code>作为从库同步主库数据时的用户：</p>
+<pre class=" language-shell"><code class="language-shell">create user 'slave'@'%' identified by '123456';
+</code></pre>
+<p>授予权限：</p>
+<pre class=" language-shell"><code class="language-shell">grant replication slave on *.* to 'slave'@'%';
+</code></pre>
+<p>刷新权限：</p>
+<pre class=" language-shell"><code class="language-shell">flush privileges;
+</code></pre>
+<p>查看<code>binlog</code>相关配置：</p>
+<pre class=" language-shell"><code class="language-shell">show global variables like 'binlog%';
+mysql> show global variables like 'binlog%';
++--------------------------------------------+--------------+
+| Variable_name                              | Value        |
++--------------------------------------------+--------------+
+| binlog_cache_size                          | 32768        |
+| binlog_checksum                            | CRC32        |
+| binlog_direct_non_transactional_updates    | OFF          |
+| binlog_error_action                        | ABORT_SERVER |
+| binlog_format                              | ROW          |
+| binlog_group_commit_sync_delay             | 0            |
+| binlog_group_commit_sync_no_delay_count    | 0            |
+| binlog_gtid_simple_recovery                | ON           |
+| binlog_max_flush_queue_time                | 0            |
+| binlog_order_commits                       | ON           |
+| binlog_row_image                           | FULL         |
+| binlog_rows_query_log_events               | OFF          |
+| binlog_stmt_cache_size                     | 32768        |
+| binlog_transaction_dependency_history_size | 25000        |
+| binlog_transaction_dependency_tracking     | COMMIT_ORDER |
++--------------------------------------------+--------------+
+15 rows in set (0.01 sec)
+</code></pre>
+<p>查看 <code>server</code> 相关配置：</p>
+<pre class=" language-shell"><code class="language-shell">show global variables like 'server%';
+mysql> show global variables like 'server%';
++----------------+--------------------------------------+
+| Variable_name  | Value                                |
++----------------+--------------------------------------+
+| server_id      | 1                                    |
+| server_id_bits | 32                                   |
+| server_uuid    | 25410417-5643-11eb-9ef1-0242ac130005 |
++----------------+--------------------------------------+
+3 rows in set (0.00 sec)
+</code></pre>
+<p>查看主库状态：</p>
+<pre class=" language-shell"><code class="language-shell">show master status;
+mysql> show master status;
++------------------+----------+--------------+------------------+-------------------+
+| File             | Position | Binlog_Do_DB | Binlog_Ignore_DB | Executed_Gtid_Set |
++------------------+----------+--------------+------------------+-------------------+
+| mysql-bin.000001 |      154 |              |                  |                   |
++------------------+----------+--------------+------------------+-------------------+
+1 row in set (0.00 sec)
+</code></pre>
+<h3 id="从库"><a href="#从库" class="headerlink" title="从库"></a>从库</h3><p>连接从库<code>mysql-slaver0</code>：<br><code>docker exec -it mysql-slave0 bash</code>进入主库，<code>mysql -u root -p 123456</code>进入<code>mysql</code>：</p>
+<pre class=" language-sql"><code class="language-sql"><span class="token comment" spellcheck="true"># 设置 master 连接参数</span>
+<span class="token comment" spellcheck="true">#master_host ：Master的地址，指的是容器的独立ip,可以通过docker inspect --format='&amp;#123;&amp;#123;.NetworkSettings.IPAddress&amp;#125;&amp;#125;' 容器名称|容器id查询容器的ip</span>
+
+
+
+change master <span class="token keyword">to</span> master_host<span class="token operator">=</span><span class="token string">'172.17.0.1'</span><span class="token punctuation">,</span> master_user<span class="token operator">=</span><span class="token string">'slave'</span><span class="token punctuation">,</span> master_password<span class="token operator">=</span><span class="token string">'123456'</span><span class="token punctuation">,</span> master_port<span class="token operator">=</span><span class="token number">13306</span><span class="token punctuation">,</span>  master_log_file<span class="token operator">=</span><span class="token string">'mysql-bin.000008'</span><span class="token punctuation">,</span>master_log_pos<span class="token operator">=</span><span class="token number">154</span><span class="token punctuation">;</span> 
+
+
+change master <span class="token keyword">to</span> 
+    master_host<span class="token operator">=</span><span class="token string">'172.17.0.1'</span><span class="token punctuation">,</span>  <span class="token comment" spellcheck="true"># 主库的docker IP，ip addr  查看 docker的ip</span>
+    master_user<span class="token operator">=</span><span class="token string">'slaver'</span><span class="token punctuation">,</span>    <span class="token comment" spellcheck="true"># 主库同步的用户</span>
+    master_password<span class="token operator">=</span><span class="token string">'123456'</span><span class="token punctuation">,</span> <span class="token comment" spellcheck="true"># 密码</span>
+    master_port<span class="token operator">=</span><span class="token number">3306</span><span class="token punctuation">,</span> <span class="token comment" spellcheck="true"># 主库的端口</span>
+    master_log_file<span class="token operator">=</span><span class="token string">'mysql-bin.000001'</span><span class="token punctuation">,</span> <span class="token comment" spellcheck="true"># 同步的文件 通过show master status来获取</span>
+    master_log_pos<span class="token operator">=</span><span class="token number">154</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true"># 开始从第几行同步 通过show master status来获取</span>
+    
+<span class="token comment" spellcheck="true"># 启动同步</span>
+<span class="token keyword">start</span> slave<span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true"># 查看 slave 状态</span>
+<span class="token keyword">show</span> slave <span class="token keyword">status</span> \G<span class="token punctuation">;</span> <span class="token comment" spellcheck="true"># 看到 Slave_IO_Running 和 Slave_SQL_Running 都为 Yes 即为配置成功</span>
+
+
+注意：因同一个主机使用docker
+连接不成功，所以需要关闭防火墙
+service firewalld stop
+重启时不会再启动防火墙
+systemctl <span class="token keyword">disable</span> firewalld<span class="token punctuation">.</span>service
+
+
+主从同步遇到 Got fatal error <span class="token number">1236</span> <span class="token keyword">from</span> master <span class="token keyword">when</span> reading <span class="token keyword">data</span> <span class="token keyword">from</span> <span class="token keyword">binary</span> log: 'Could <span class="token operator">not</span> find <span class="token keyword">first</span> log<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+
+首先遇到这个是因为binlog位置索引处的问题，不要reset slave；
+
+reset slave会将主从同步的文件以及位置恢复到初始状态，一开始没有数据还好，有数据的话，相当于重新开始同步，可能会出现一些问题；
+
+一般做主从同步，都是要求以后的数据实现主从同步，而对于旧的数据完全可以使用数据库同步工具先将数据库同步，完了再进行主从同步；
+
+好了遇到上面的问题，正确做法是：
+
+<span class="token number">1</span><span class="token punctuation">.</span>打开主服务器，进入mysql
+
+<span class="token number">2</span><span class="token punctuation">.</span>执行flush logs；<span class="token comment" spellcheck="true">//这时主服务器会重新创建一个binlog文件；</span>
+
+<span class="token number">3</span><span class="token punctuation">.</span>在主服务上执行<span class="token keyword">show</span> master <span class="token keyword">status</span> \G<span class="token punctuation">;</span>显示如下：
+
+<span class="token number">4</span><span class="token punctuation">.</span>来到从服务器的mysql；
+
+<span class="token number">5</span><span class="token punctuation">.</span>stop slave<span class="token punctuation">;</span>
+
+<span class="token number">6</span><span class="token punctuation">.</span>change master <span class="token keyword">to</span> master_log_file<span class="token operator">=</span><span class="token string">'mysql-bin.000012'</span><span class="token punctuation">,</span>master_log_pos<span class="token operator">=</span><span class="token number">154</span><span class="token punctuation">;</span><span class="token comment" spellcheck="true">//这里的file和pos都是上面主服务器master显示的。</span>
+
+<span class="token number">7</span><span class="token punctuation">.</span><span class="token keyword">start</span> slave<span class="token punctuation">;</span><span class="token comment" spellcheck="true">//这时候就应可以了</span>
+
+<span class="token number">8</span><span class="token punctuation">.</span><span class="token keyword">show</span> slave <span class="token keyword">status</span> \G<span class="token punctuation">;</span><span class="token comment" spellcheck="true">//结果如下：</span>
+</code></pre>
+<p>对从库<code>mysql-slaver1</code>做相同操作。</p>
+<p>还可以使用<code>stop slave;</code>停止同步。</p>
+<h2 id="binlog-模式"><a href="#binlog-模式" class="headerlink" title="binlog 模式"></a>binlog 模式</h2><p>前面通过<code>show global variables like &#39;binlog%&#39;;</code>命令可以看到<code>binlog_format </code>为<code>ROW</code>。</p>
+<p><code>binlog</code>有以下三种模式：</p>
+<ul>
+<li><p><code>ROW</code>：每条记录的修改都会被记录。</p>
+<p>优点：不存在数据不一致的情况。</p>
+<p>缺点：一旦修改表结构( alter table) 会出现 binlog 暴涨现象。</p>
+</li>
+<li><p><code>STATEMENT</code>：每执行一条导致值变化的 sql 就会记录到 binlog 中。</p>
+<p>优点： 仅仅记录了SQL，不会记录执行结果，减少了 binlog 日志量，节约了 IO，提高了性能</p>
+<p>缺点：会出现数据不一致的情况。</p>
+</li>
+<li><p><code>MIXED</code>：以上两种模式混合使用。</p>
+</li>
+</ul>
+<p>我们可以通过编辑<code>./master/conf/my.cnf</code>文件，添加一行<code>binlog_format = MIXED</code>来修改<code>binlog</code>模式。</p>
+<h2 id="MySQL-主从同步原理"><a href="#MySQL-主从同步原理" class="headerlink" title="MySQL 主从同步原理"></a>MySQL 主从同步原理</h2><p>主从同步原理图：</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/9adf4321bce1c35dae6c304b3fa7aa75.png" alt="mysql主从同步原理图"></p>
+<p>MySQL 默认的复制方式是<code>异步</code>的，主库把日志发送给从库后不关心从库是否已经处理，这样会产生一个问题就是假设主库挂了，从库处理失败了，这时候从库升为主库后，日志就丢失了。可以根据情况调整同步策略：</p>
+<ul>
+<li>全同步复制：主库写入 binlog 后强制同步日志到从库，<code>所有的从库</code>都执行完成后才返回给客户端。性能会受到严重影响。</li>
+<li>半同步复制：从库写入日志成功后返回 ACK 确认给主库，主库收到至少一个从库的确认就认为写操作完成。</li>
+</ul>
+<blockquote>
+<p>主从延迟：主库与从库之间数据同步肯定是有延时的（网络）。解决方案是：部分查询强制走主库，主库肯定是最新的数据。</p>
+</blockquote>
+<h1 id="Docker构建Mycat（单节点）"><a href="#Docker构建Mycat（单节点）" class="headerlink" title="Docker构建Mycat（单节点）"></a><a target="_blank" rel="noopener" href="https://www.cnblogs.com/myitnews/p/12380074.html">Docker构建Mycat（单节点）</a></h1><p>Mycat是使用 JAVA 语言进行编写开发，使用前需要先安装 JAVA 运行环境(JRE),由于 MyCAT 中使用了JDK7 中的一些特性，所以要求必须在 JDK7 以上的版本上运行。</p>
+<p>Mycat支持多种数据库接入，如：MySQL、SQLServer、Oracle、MongoDB 等，推荐使用MySQL 做集群。</p>
+<p><strong>1. 创建Mycat配置文件夹</strong></p>
+<pre><code>mkdir /usr/local/mycat
+mkdir /usr/local/mycat/conf
+</code></pre>
+<p><strong>2. 创建docker文件夹</strong></p>
+<pre><code>mkdir /usr/local/docker/mycat/
+cd /usr/local/docker/mycat
+</code></pre>
+<p><strong>3. 下载mycat安装包</strong></p>
+<pre><code>wget http://dl.mycat.io/1.6.6.1/Mycat-server-1.6.6.1-release-20181031195535-linux.tar.gz
+mv Mycat-server-1.6.6.1-release-20181031195535-linux.tar.gz mycat.tar.gz
+</code></pre>
+<p><strong>4. 解压并复制文件</strong></p>
+<pre><code>tar -zxvf mycat.tar.gz
+cp -r mycat/conf/ /usr/local/mycat
+</code></pre>
+<p><strong>5. 创建Dockerfile文件（在mycat压缩包所在目录）</strong></p>
+<pre><code>#基于openjdk:8 创建镜像,
+#如果是基于centos或其他的，必须保证已安装了JDK，否则就需要在Dockerfile文件中也ADD进来
+FROM openjdk:8
+
+#将宿主机目录下的文件拷贝进镜像且ADD命令会自动处理URL和解压tar压缩包
+#将mycat解压到/usr/local目录中,得到 /usr/local/mycat
+ADD mycat.tar.gz /usr/local
+
+#容器数据卷，用于数据保存和持久化工作
+#将mycat的配置文件的地址暴露出映射地址,启动时直接映射宿主机的文件夹
+VOLUME /usr/local/mycat
+WORKDIR /usr/local/mycat
+
+#用来在构建镜像过程中设置环境变量
+ENV MYCAT_HOME=/usr/local/mycat
+
+#暴露出MyCat的所需端口
+EXPOSE 8066 9066
+
+#以前台进程的方式启动MyCat服务
+CMD [&quot;/usr/local/mycat/bin/mycat&quot;, &quot;console&quot;,&quot;&amp;&quot;]
+</code></pre>
+<p><strong>6. 构建镜像</strong></p>
+<pre><code># 注意最后还有 .
+docker build -t mycat-1.6.6.1 .
+</code></pre>
+<p><strong>7. 启动容器</strong></p>
+<pre><code>#容器券：-v /usr/local/mycat/conf/:/usr/local/mycat/conf/
+#冒号前是本机路径，冒号后是容器内的目录路径
+#创建多个容器卷，尤其是配置文件和日志
+docker run --name mycat -p 8066:8066 -p 9066:9066 -v /usr/local/mycat/conf/:/usr/local/mycat/conf/ -v /usr/local/mycat/logs/:/usr/local/mycat/logs/ -d mycat-1.6.6.1
+</code></pre>
+<p>注：为了确定容器券设置是否有效，可以在本机的目录下改下配置文件，进入容器内查看文件是否改变，如果一致，则设置成功。</p>
+<p>防火墙设置，需要开放mycat的连接端口8066和管理端口9066。</p>
+<p><strong>8. 进入容器和退出容器</strong></p>
+<pre><code># 进入容器
+docker exec -it 1b652326460e /bin/bash
+
+# 两种退出方式
+# 第一种：容器停止退出，在容器终端输入exit
+# 第二种：容器不停止退出，在容器终端按Ctrl+P+Q
+</code></pre>
+<p><strong>9. 配置</strong></p>
+<p>编辑/usr/local/mycat/conf/目录下的server.xml,schema.xml等配置文件。</p>
+<p>修改server.xml文件</p>
+<pre><code># 进入容器
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!-- - - Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); 
+ - you may not use this file except in compliance with the License. - You 
+ may obtain a copy of the License at - - http://www.apache.org/licenses/LICENSE-2.0 
+ - - Unless required by applicable law or agreed to in writing, software - 
+ distributed under the License is distributed on an &quot;AS IS&quot; BASIS, - WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. - See the 
+ License for the specific language governing permissions and - limitations 
+under the License. --&gt;
+&lt;!DOCTYPE mycat:server SYSTEM &quot;server.dtd&quot;&gt;
+&lt;mycat:server xmlns:mycat=&quot;http://org.opencloudb/&quot;&gt;
+&lt;system&gt;
+&lt;property name=&quot;defaultSqlParser&quot;&gt;druidparser&lt;/property&gt;
+&lt;property name=&quot;charset&quot;&gt;utf8mb4&lt;/charset&gt;
+      &lt;!--  &lt;property name=&quot;useCompression&quot;&gt;1&lt;/property&gt;--&gt; &lt;!--1为开启mysql压缩协议--&gt;
+&lt;!-- &lt;property name=&quot;processorBufferChunk&quot;&gt;40960&lt;/property&gt; --&gt;
+ &lt;!-- 
+ &lt;property name=&quot;processors&quot;&gt;1&lt;/property&gt; 
+ &lt;property name=&quot;processorExecutor&quot;&gt;32&lt;/property&gt; 
+--&gt;
+&lt;!--默认是65535 64K 用于sql解析时最大文本长度 --&gt;
+&lt;!--&lt;property name=&quot;maxStringLiteralLength&quot;&gt;65535&lt;/property&gt;--&gt;
+&lt;!--&lt;property name=&quot;sequnceHandlerType&quot;&gt;0&lt;/property&gt;--&gt;
+&lt;!--&lt;property name=&quot;backSocketNoDelay&quot;&gt;1&lt;/property&gt;--&gt;
+&lt;!--&lt;property name=&quot;frontSocketNoDelay&quot;&gt;1&lt;/property&gt;--&gt;
+&lt;!--&lt;property name=&quot;processorExecutor&quot;&gt;16&lt;/property&gt;--&gt;
+  &lt;!-- 
+&lt;property name=&quot;mutiNodeLimitType&quot;&gt;1&lt;/property&gt; 0：开启小数量级（默认） ；1：开启亿级数据排序
+&lt;property name=&quot;mutiNodePatchSize&quot;&gt;100&lt;/property&gt; 亿级数量排序批量
+   &lt;property name=&quot;processors&quot;&gt;32&lt;/property&gt; &lt;property name=&quot;processorExecutor&quot;&gt;32&lt;/property&gt; 
+   &lt;property name=&quot;serverPort&quot;&gt;8066&lt;/property&gt; &lt;property name=&quot;managerPort&quot;&gt;9066&lt;/property&gt; 
+   &lt;property name=&quot;idleTimeout&quot;&gt;300000&lt;/property&gt; &lt;property name=&quot;bindIp&quot;&gt;0.0.0.0&lt;/property&gt; 
+&lt;property name=&quot;frontWriteQueueSize&quot;&gt;4096&lt;/property&gt; &lt;property name=&quot;processors&quot;&gt;32&lt;/property&gt; --&gt;
+&lt;/system&gt;
+&lt;!--#注：配置写入用户和数据库，这里配置的数据库名为sky(schema中配置的虚拟数据库名字)，生产环境根据实际情况配置，多个库用逗号隔开。--&gt;
+&lt;user name=&quot;root&quot;&gt;
+&lt;property name=&quot;password&quot;&gt;123456&lt;/property&gt;
+&lt;property name=&quot;schemas&quot;&gt;sky&lt;/property&gt;
+&lt;/user&gt;
+&lt;!--#下面配置只读用户和数据库。--&gt;
+&lt;user name=&quot;dev&quot;&gt;
+&lt;property name=&quot;password&quot;&gt;123456&lt;/property&gt;
+&lt;property name=&quot;schemas&quot;&gt;sky&lt;/property&gt;
+&lt;property name=&quot;readOnly&quot;&gt;true&lt;/property&gt;
+&lt;/user&gt;
+
+&lt;/mycat:server&gt;
+</code></pre>
+<p>schema.xml的配置如下：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot;?&gt;
+   &lt;!DOCTYPE mycat:schema SYSTEM &quot;schema.dtd&quot;&gt;
+    &lt;mycat:schema xmlns:mycat=&quot;http://org.opencloudb/&quot; &gt;
+    
+            &lt;schema name=&quot;sky&quot; checkSQLschema=&quot;true&quot; sqlMaxLimit=&quot;100&quot;&gt;
+                    &lt;table name=&quot;travelrecord&quot; dataNode=&quot;dn1&quot; rule=&quot;auto-sharding-long&quot; /&gt;
+            &lt;/schema&gt;
+            &lt;dataNode name=&quot;dn1&quot; dataHost=&quot;ieshost&quot; database=&quot;mydb&quot; /&gt;
+           &lt;dataHost name=&quot;ieshost&quot; maxCon=&quot;1000&quot; minCon=&quot;10&quot; balance=&quot;3&quot;
+                  writeType=&quot;0&quot; dbType=&quot;mysql&quot; dbDriver=&quot;jdbc&quot; switchType=&quot;1&quot;  slaveThreshold=&quot;100&quot;&gt;
+                   &lt;heartbeat&gt;select user()&lt;/heartbeat&gt;
+                  &lt;writeHost host=&quot;master&quot; url=&quot;jdbc:mysql://172.17.0.1:13306?useSSL=false&amp;amp;characterEncoding=utf8&amp;amp;serverTimezone=GMT%2B8&quot; user=&quot;root    &quot;
+                           password=&quot;123456&quot;&gt;
+                         &lt;readHost host=&quot;slave&quot; url=&quot;jdbc:mysql://192.168.1.253:3340?useSSL=false&amp;amp;characterEncoding=utf8&amp;amp;serverTimezone=GMT%2B8&quot; user =&quot;dev&quot; password=&quot;123456&quot; /&gt;
+                  &lt;/writeHost&gt;
+                 &lt;writeHost host=&quot;slave&quot; url=&quot;jdbc:mysql://192.168.1.253:3339?useSSL=false&amp;amp;characterEncoding=utf8&amp;amp;serverTimezone=GMT%2B8&quot; user=&quot;dev&quot;
+                          password=&quot;123456&quot; /&gt;
+          &lt;/dataHost&gt;
+  &lt;/mycat:schema&gt;
+</code></pre>
+<p>更多详细的配置请看：</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/myitnews/p/12380197.html">Mycat的server.xml配置</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/myitnews/p/12380422.html">Mycat的schema.xml配置</a></p>
+<p><strong>10. Navicat连接</strong></p>
+<p><a target="_blank" rel="noopener" href="https://img2018.cnblogs.com/i-beta/660329/202002/660329-20200229110411161-675446138.png"><img src="https://img2018.cnblogs.com/i-beta/660329/202002/660329-20200229110411161-675446138.png" alt="img"></a></p>
+<p><a target="_blank" rel="noopener" href="https://img2018.cnblogs.com/i-beta/660329/202002/660329-20200229110100376-77413683.png"><img src="https://img2018.cnblogs.com/i-beta/660329/202002/660329-20200229110100376-77413683.png" alt="img"></a></p>
 
                 
             </div>
@@ -528,7 +966,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://SuXiaoNan2021.github.io/2021/092416108.html">https://SuXiaoNan2021.github.io/2021/092416108.html</a>
+                    <a href="https://SuXiaoNan2021.github.io/2021/092515.html">https://SuXiaoNan2021.github.io/2021/092515.html</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -737,7 +1175,7 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2021/09253.html">
+                <a href="/2021/09258.html">
                     <div class="card-image">
                         
                         
@@ -771,16 +1209,16 @@
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="far fa-dot-circle"></i>
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/092416108.html">
+                <a href="/2021/09257.html">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="Hello World">
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="">
                         
-                        <span class="card-title">Hello World</span>
+                        <span class="card-title"></span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -791,7 +1229,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-09-24
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-09-25
                             </span>
                         <span class="publish-author">
                             
@@ -801,7 +1239,6 @@
                         </span>
                     </div>
                 </div>
-
                 
             </div>
         </div>

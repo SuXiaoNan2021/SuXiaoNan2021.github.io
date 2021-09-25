@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Hello World, 博客">
+    <meta name="keywords" content="博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Hello World | 博客</title>
+    <title>博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -311,12 +311,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Hello World</h1>
+                    <h1 class="description center-align post-title"></h1>
                 </div>
             </div>
         </div>
@@ -444,7 +444,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-09-24
+                    2021-09-25
                 </div>
                 
 
@@ -458,14 +458,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    86
+                    661
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    3 分
                 </div>
                 
 
@@ -485,23 +485,169 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre class=" language-bash"><code class="language-bash">$ hexo new <span class="token string">"My New Post"</span>
+                <h1 id="docker-compose搭建redis集群–Cluster模式"><a href="#docker-compose搭建redis集群–Cluster模式" class="headerlink" title="docker-compose搭建redis集群–Cluster模式"></a><a target="_blank" rel="noopener" href="https://www.cnblogs.com/brithToSpring/p/13187206.html">docker-compose搭建redis集群–Cluster模式</a></h1><p>Redis有三种集群模式</p>
+<p>* 主从模式</p>
+<p>* Sentinel模式</p>
+<p>* Cluster模式</p>
+<p>参考:<a target="_blank" rel="noopener" href="https://blog.csdn.net/miss1181248983/article/details/90056960">Redis集群详解</a></p>
+<p>1.首先需要docker 、<a target="_blank" rel="noopener" href="https://www.cnblogs.com/brithToSpring/p/13152660.html">docker-compose 环境</a></p>
+<h3 id=""><a href="#" class="headerlink" title=""></a><img src="https://img2020.cnblogs.com/blog/1587750/202006/1587750-20200624113653453-994704635.png" alt="img"></h3><p>2.下载相关配置文件</p>
+<p>Gitee地址: <a target="_blank" rel="noopener" href="https://gitee.com/lifeToSpring/redis-cluster">https://gitee.com/lifeToSpring/redis-cluster</a></p>
+<p>目录结构:</p>
+<p><img src="https://img2020.cnblogs.com/blog/1587750/202006/1587750-20200624140228871-1911929950.png" alt="img"></p>
+<p> redis.sh</p>
+<pre><code>redis-server  /config/nodes-$&#123;PORT&#125;.conf
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre class=" language-bash"><code class="language-bash">$ hexo server
+<p>3.修改对应nodes-${PORT}.conf的配置文件<a target="_blank" rel="noopener" href="https://www.cnblogs.com/tswcypy/p/11458704.html">(参考)</a>:</p>
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<pre><code># bind 127.0.0.1 //加上注释#
+protected-mode no //关闭保护模式
+port 6391  //绑定自定义端口
+# daemonize yes //禁止redis后台运行
+pidfile /var/run/redis_6391.pid
+cluster-enabled yes //开启集群 把注释#去掉
+cluster-config-file nodes_6391.conf //集群的配置 配置文件首次启动自动生成
+requirepass 1234
+masterauth 1234
+appendonly yes //开启aof
+cluster-announce-ip 10.xx.xx.xx   //要宣布的IP地址。nat模式要指定宿主机IP
+cluster-announce-port 6391  //要宣布的数据端口。
+cluster-announce-bus-port 16391  //要宣布的集群总线端口
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre class=" language-bash"><code class="language-bash">$ hexo generate
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>4.1 <strong>节点192.168.255.225：</strong></p>
+<p>docker-compose.yml</p>
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<pre><code>services:
+  redis-master1:
+    image: redis:5.0 # 基础镜像
+    container_name: node1 # 容器名称
+    working_dir: /config # 切换工作目录
+    environment: # 环境变量
+      - PORT=6391 # 会使用config/nodes-$&#123;PORT&#125;.conf这个配置文件
+    ports: # 映射端口，对外提供服务
+      - 6391:6391 # redis的服务端口
+      - 16391:16391 # redis集群监控端口
+    stdin_open: true # 标准输入打开
+    tty: true # 后台运行不退出
+    network_mode: host # 使用host模式
+    privileged: true # 拥有容器内命令执行的权限
+    volumes:
+      - /mydata/redis-cluster/config:/config #配置文件目录映射到宿主机
+    entrypoint: # 设置服务默认的启动程序
+      - /bin/bash
+      - redis.sh
+  redis-master2:
+    image: redis:5.0
+    working_dir: /config
+    container_name: node2
+    environment:
+      - PORT=6392
+    ports:
+      - 6392:6392
+      - 16392:16392
+    stdin_open: true
+    network_mode: host
+    tty: true
+    privileged: true
+    volumes:
+      - /mydata/redis-cluster/config:/config
+    entrypoint:
+      - /bin/bash
+      - redis.sh
+  redis-master3:
+    image: redis:5.0
+    container_name: node3
+    working_dir: /config
+    environment:
+      - PORT=6393
+    ports:
+      - 6393:6393
+      - 16393:16393
+    stdin_open: true
+    network_mode: host
+    tty: true
+    privileged: true
+    volumes:
+      - /mydata/redis-cluster/config:/config
+    entrypoint:
+      - /bin/bash
+      - redis.sh
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre class=" language-bash"><code class="language-bash">$ hexo deploy
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p> 启动redis实例</p>
+<pre><code>docker-compose -f docker-compose.yml up
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-<h3 id="create-new-blog"><a href="#create-new-blog" class="headerlink" title="create new blog"></a>create new blog</h3><pre class=" language-bash"><code class="language-bash">$ hexo n <span class="token string">"我的博客"</span>
+<p><img src="https://img2020.cnblogs.com/blog/1587750/202006/1587750-20200624140834790-1442380743.png" alt="img"></p>
+<p><strong>4.2 节点192.168.255.226：</strong></p>
+<p>docker-compose.yml</p>
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<pre><code>version: &quot;3&quot;
+services:
+  redis-slave1:
+    image: redis:5.0
+    container_name: node4
+    working_dir: /config
+    environment:
+      - PORT=6394
+    ports:
+      - 6394:6394
+      - 16394:16394
+    stdin_open: true
+    network_mode: host
+    tty: true
+    privileged: true
+    volumes:
+      - /mydata/redis-cluster/config:/config
+    entrypoint:
+      - /bin/bash
+      - redis.sh
+  redis-slave2:
+    image: redis:5.0
+    working_dir: /config
+    container_name: node5
+    environment:
+      - PORT=6395
+    ports:
+      - 6395:6395
+      - 16395:16395
+    stdin_open: true
+    network_mode: host
+    tty: true
+    privileged: true
+    volumes:
+      - /mydata/redis-cluster/config:/config
+    entrypoint:
+      - /bin/bash
+      - redis.sh
+  redis-slave3:
+    image: redis:5.0
+    container_name: node6
+    working_dir: /config
+    environment:
+      - PORT=6396
+    ports:
+      - 6396:6396
+      - 16396:16396
+    stdin_open: true
+    network_mode: host
+    tty: true
+    privileged: true
+    volumes:
+      - /mydata/redis-cluster/config:/config
+    entrypoint:
+      - /bin/bash
+      - redis.sh
 </code></pre>
-<h3 id="publish"><a href="#publish" class="headerlink" title="publish"></a>publish</h3><pre class=" language-bash"><code class="language-bash">$ hexo g -d
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>启动redis实例</p>
+<pre><code>docker-compose -f docker-compose.yml up
 </code></pre>
+<p><img src="https://img2020.cnblogs.com/blog/1587750/202006/1587750-20200624140707818-2030320017.png" alt="img"></p>
+<p>5 使用docker镜像 zvelo/<a target="_blank" rel="noopener" href="https://www.cnblogs.com/ivictor/p/9768010.html">redis-trib 构建redis集群</a></p>
+<pre><code>docker run --rm -it zvelo/redis-trib create --replicas 1 192.168.255.225:6391 192.168.255.225:6392 192.168.255.225:6393 192.168.255.226:6394 192.168.255.226:6395 192.168.255.226:6396
+</code></pre>
+<p> <img src="https://img2020.cnblogs.com/blog/1587750/202006/1587750-20200624143330367-2069772548.png" alt="img"></p>
 
                 
             </div>
@@ -528,7 +674,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://SuXiaoNan2021.github.io/2021/092416108.html">https://SuXiaoNan2021.github.io/2021/092416108.html</a>
+                    <a href="https://SuXiaoNan2021.github.io/2021/09256.html">https://SuXiaoNan2021.github.io/2021/09256.html</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -737,7 +883,7 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2021/09253.html">
+                <a href="/2021/092512.html">
                     <div class="card-image">
                         
                         
@@ -771,16 +917,16 @@
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="far fa-dot-circle"></i>
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/092416108.html">
+                <a href="/2021/09255.html">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="Hello World">
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="">
                         
-                        <span class="card-title">Hello World</span>
+                        <span class="card-title"></span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -791,7 +937,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-09-24
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-09-25
                             </span>
                         <span class="publish-author">
                             
@@ -801,7 +947,6 @@
                         </span>
                     </div>
                 </div>
-
                 
             </div>
         </div>

@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Hello World, 博客">
+    <meta name="keywords" content="博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Hello World | 博客</title>
+    <title>博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -311,12 +311,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Hello World</h1>
+                    <h1 class="description center-align post-title"></h1>
                 </div>
             </div>
         </div>
@@ -444,7 +444,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-09-24
+                    2021-09-25
                 </div>
                 
 
@@ -458,14 +458,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    86
+                    772
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    3 分
                 </div>
                 
 
@@ -485,23 +485,73 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre class=" language-bash"><code class="language-bash">$ hexo new <span class="token string">"My New Post"</span>
+                <ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/">博客园</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/ming-4/">首页</a></li>
+<li><a target="_blank" rel="noopener" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+<li><a target="_blank" rel="noopener" href="https://msg.cnblogs.com/send/%E5%B0%8F%E5%A4%A7%E5%A4%A7%E5%B0%8F">联系</a></li>
+<li><a target="_blank" rel="noopener" href="https://i.cnblogs.com/">管理</a></li>
+<li><a href="javascript:void(0)">订阅</a><a target="_blank" rel="noopener" href="https://www.cnblogs.com/ming-4/rss/"><img src="https://www.cnblogs.com/skins/coffee/images/xml.gif" alt="订阅"></a></li>
+</ul>
+<p>随笔- 168 文章- 0 评论- 61 阅读- 88万 </p>
+<h1 id="ARM64架构下面安装mysql5-7-22"><a href="#ARM64架构下面安装mysql5-7-22" class="headerlink" title="ARM64架构下面安装mysql5.7.22"></a><a target="_blank" rel="noopener" href="https://www.cnblogs.com/ming-4/p/11690816.html">ARM64架构下面安装mysql5.7.22</a></h1><p>MySQL下载地址为：</p>
+<p><a target="_blank" rel="noopener" href="https://obs.cn-north-4.myhuaweicloud.com/obs-mirror-ftp4/database/mysql-5.7.27-aarch64.tar.gz">https://obs.cn-north-4.myhuaweicloud.com/obs-mirror-ftp4/database/mysql-5.7.27-aarch64.tar.gz</a></p>
+<p>\1. 添加mysql用户组和mysql用户，用于隔离mysql进程<br># groupadd -r mysql &amp;&amp; useradd -r -g mysql -s /sbin/nologin -M mysql<br>2.安装依赖库<br># yum install -y libaio*<br>\3. 下载解压Mysql<br># wget <a target="_blank" rel="noopener" href="https://obs.cn-north-4.myhuaweicloud.com/obs-mirror-ftp4/database/mysql-5.7.27-aarch64.tar.gz">https://obs.cn-north-4.myhuaweicloud.com/obs-mirror-ftp4/database/mysql-5.7.27-aarch64.tar.gz</a><br># tar xzvf mysql-5.7.27-aarch64.tar.gz -C /usr/local/<br>4.配置Mysql<br># mv /usr/local/mysql-5.7.27-aarch64 /usr/local/mysql<br># mkdir -p /usr/local/mysql/logs<br># chown -R mysql:mysql /usr/local/mysql<br># ln -sf /usr/local/mysql/my.cnf /etc/my.cnf<br># cp -rf /usr/local/mysql/extra/lib* /usr/lib64/<br># mv /usr/lib64/libstdc++.so.6 /usr/lib64/libstdc++.so.6.old<br># ln -s /usr/lib64/libstdc++.so.6.0.24 /usr/lib64/libstdc++.so.6</p>
+<p># 设置开机启动<br># cp -rf /usr/local/mysql/support-files/mysql.server /etc/init.d/mysqld<br># chmod +x /etc/init.d/mysqld<br># systemctl enable mysqld<br>\5. 添加环境变量<br># vim /etc/profile</p>
+<p>添加下面两行代码：<br>export MYSQL_HOME=/usr/local/mysql<br>export PATH=$PATH:$MYSQL_HOME/bin</p>
+<p># source /etc/profile</p>
+<p><img src="https://img2018.cnblogs.com/blog/1569426/201910/1569426-20191017103402969-1967192554.png" alt="img"></p>
+<p>\5. 初始化启动mysql<br># 无密码初始化登录<br># mysqld –initialize-insecure –user=mysql –basedir=/usr/local/mysql –datadir=/usr/local/mysql/data</p>
+<p>！！！执行这里出现错误：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1569426/201910/1569426-20191017103441373-1400704578.png" alt="img"></p>
+<p> 解决方法：</p>
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<pre><code>vim /etc/my.cnf
+查看文件，寻找datadir=...
+查看到：datadir=/usr/local/mysql/data, 
+这个是data保存目录。
+进入/usr/local/mysql/data后，查看到确实有数据：
+将/usr/local/mysql/data备份，
+cd /usr/local/mysql
+mv data data.bak
+接着执行：
+mysqld --initialize-insecure --user=mysql --basedir=/usr/local/mysql --datadir=/usr/local/mysql/data
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre class=" language-bash"><code class="language-bash">$ hexo server
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>#开启mysql</p>
+<p># systemctl start mysqld</p>
+<p>#查看状态<br># systemctl status mysqld</p>
+<p><img src="https://img2018.cnblogs.com/blog/1569426/201910/1569426-20191017104259421-889993793.png" alt="img"></p>
+<p> 这里表示mysql已经安装成功了。</p>
+<p>因为mysql的这个初始密码安装稍有差池就会出错，之前在Win10上安装也出现过这样的情况，所以这里我们先设置一下不进行密码审核。</p>
+<pre><code>在mysql安装路径找到 my.ini（一般linux系统在/etc/my.ini）
+vim打开：
+在 [mysqld] 这一行下：
+添加 skip-grant-tables 跳过密码校验
+！！！本人环境下文件名为：my.cnf
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre class=" language-bash"><code class="language-bash">$ hexo generate
+<p>使用：mysql -u root 进行登录 </p>
+<p>！！！某次重启开发板后，出现错误：</p>
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<pre><code># mysql -u root
+-bash: mysql: command not found
+
+原因:这是由于系统默认会查找/usr/bin下的命令，如果这个命令不在这个目录下，当然会找不到命令，我们需要做的就是映射一个链接到/usr/bin目录下，相当于建立一个链接文件。
+首先得知道mysql命令或mysqladmin命令的完整路径，比如mysql的路径是：/usr/local/mysql/bin/mysql，我们则可以这样执行命令：
+
+# ln -s /usr/local/mysql/bin/mysql /usr/bin
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre class=" language-bash"><code class="language-bash">$ hexo deploy
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>！！！提示出现错误</p>
+<p><img src="https://img2018.cnblogs.com/blog/1569426/201910/1569426-20191017105050417-1583653776.png" alt="img"></p>
+<p> 原因是缺少libncurses.so.5共享库。</p>
+<p>解决方法：</p>
+<pre><code>本人使用的是EAIDK-610开发板，在板子的/lib64文件夹下查看到系统拥有libncurses.so.6.1的文件。
+所以使用软连接创建一个libncurses.so.6.1指向libncurses.so.5的连接，这个共享库可以向下兼容。
+具体参考下面图片事例。
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-<h3 id="create-new-blog"><a href="#create-new-blog" class="headerlink" title="create new blog"></a>create new blog</h3><pre class=" language-bash"><code class="language-bash">$ hexo n <span class="token string">"我的博客"</span>
-</code></pre>
-<h3 id="publish"><a href="#publish" class="headerlink" title="publish"></a>publish</h3><pre class=" language-bash"><code class="language-bash">$ hexo g -d
-</code></pre>
+<p><img src="https://img2018.cnblogs.com/blog/1569426/201910/1569426-20191017105516569-1227537043.png" alt="img"></p>
+<p>再次使用：mysql -u root 进行登录，登录成功。</p>
 
                 
             </div>
@@ -528,7 +578,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://SuXiaoNan2021.github.io/2021/092416108.html">https://SuXiaoNan2021.github.io/2021/092416108.html</a>
+                    <a href="https://SuXiaoNan2021.github.io/2021/09253.html">https://SuXiaoNan2021.github.io/2021/09253.html</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -737,7 +787,7 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2021/09253.html">
+                <a href="/2021/092516.html">
                     <div class="card-image">
                         
                         
@@ -771,7 +821,7 @@
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="far fa-dot-circle"></i>
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
                 <a href="/2021/092416108.html">
@@ -801,7 +851,6 @@
                         </span>
                     </div>
                 </div>
-
                 
             </div>
         </div>

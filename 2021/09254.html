@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="docker按照, 博客">
+    <meta name="keywords" content="博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>docker按照 | 博客</title>
+    <title>博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -311,12 +311,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/22.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">docker按照</h1>
+                    <h1 class="description center-align post-title"></h1>
                 </div>
             </div>
         </div>
@@ -444,28 +444,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-09-24
+                    2021-09-25
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-09-24
+                    2021-09-25
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    0
+                    640
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    3 分
                 </div>
                 
 
@@ -485,7 +485,161 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                
+                <p>docker-compose安装Kafka集群</p>
+<p><img src="https://zysite.top/upload/2021/04/logo-775ee8592a6b4875aa483a982c0be3c0.jpg" alt="img">58 次访问发布: 2021-04-10最后编辑: 2021-04-11</p>
+<p> <a target="_blank" rel="noopener" href="https://zysite.top/categories/docker">· Docker </a><a target="_blank" rel="noopener" href="https://zysite.top/categories/kafka">· Kafka</a></p>
+<h2 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h2><p>由于 Kafka 借助 ZooKeeper 进行数据同步，所以安装 Kafka 集群时，需先安装 ZooKeeper 集群。</p>
+<p>为了降低耦合，分别安装 ZooKeeper 集群和 Kafka 集群，然后通过配置在同一个 Docker 网络中保证 Kafka 能和 ZooKeeper 正常通信。</p>
+<p>首先通过<code>docker network create zookeeper_network</code>命令创建一个名为<code>zookeeper_network</code>的 Docker 网络。</p>
+<h2 id="ZooKeeper-Compose-配置文件"><a href="#ZooKeeper-Compose-配置文件" class="headerlink" title="ZooKeeper Compose 配置文件"></a>ZooKeeper Compose 配置文件</h2><p>创建一个 docker-compose.yml 文件，内容如下：</p>
+<pre class=" language-yaml"><code class="language-yaml"><span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token string">'3.1'</span>
+<span class="token key atrule">networks</span><span class="token punctuation">:</span>
+  <span class="token key atrule">default</span><span class="token punctuation">:</span>
+    <span class="token key atrule">external</span><span class="token punctuation">:</span>
+      <span class="token key atrule">name</span><span class="token punctuation">:</span> zookeeper_network
+<span class="token key atrule">services</span><span class="token punctuation">:</span>
+  <span class="token key atrule">zoo1</span><span class="token punctuation">:</span>
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> zookeeper
+    <span class="token key atrule">restart</span><span class="token punctuation">:</span> always
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> zoo1
+    <span class="token key atrule">hostname</span><span class="token punctuation">:</span> zoo1
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> 2181<span class="token punctuation">:</span><span class="token number">2181</span>
+    <span class="token key atrule">volumes</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token string">"./zoo1/data:/data"</span>
+      <span class="token punctuation">-</span> <span class="token string">"./zoo1/datalog:/datalog"</span>
+    <span class="token key atrule">environment</span><span class="token punctuation">:</span>
+      <span class="token key atrule">ZOO_MY_ID</span><span class="token punctuation">:</span> <span class="token number">1</span>
+      <span class="token key atrule">ZOO_SERVERS</span><span class="token punctuation">:</span> server.1=zoo1<span class="token punctuation">:</span>2888<span class="token punctuation">:</span>3888;2181 server.2=zoo2<span class="token punctuation">:</span>2888<span class="token punctuation">:</span>3888;2181 server.3=zoo3<span class="token punctuation">:</span>2888<span class="token punctuation">:</span>3888;2181
+
+  <span class="token key atrule">zoo2</span><span class="token punctuation">:</span>
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> zookeeper
+    <span class="token key atrule">restart</span><span class="token punctuation">:</span> always
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> zoo2
+    <span class="token key atrule">hostname</span><span class="token punctuation">:</span> zoo2
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> 2182<span class="token punctuation">:</span><span class="token number">2181</span>
+    <span class="token key atrule">volumes</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token string">"./zoo2/data:/data"</span>
+      <span class="token punctuation">-</span> <span class="token string">"./zoo2/datalog:/datalog"</span>
+    <span class="token key atrule">environment</span><span class="token punctuation">:</span>
+      <span class="token key atrule">ZOO_MY_ID</span><span class="token punctuation">:</span> <span class="token number">2</span>
+      <span class="token key atrule">ZOO_SERVERS</span><span class="token punctuation">:</span> server.1=zoo1<span class="token punctuation">:</span>2888<span class="token punctuation">:</span>3888;2181 server.2=zoo2<span class="token punctuation">:</span>2888<span class="token punctuation">:</span>3888;2181 server.3=zoo3<span class="token punctuation">:</span>2888<span class="token punctuation">:</span>3888;2181
+
+  <span class="token key atrule">zoo3</span><span class="token punctuation">:</span>
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> zookeeper
+    <span class="token key atrule">restart</span><span class="token punctuation">:</span> always
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> zoo3
+    <span class="token key atrule">hostname</span><span class="token punctuation">:</span> zoo3
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> 2183<span class="token punctuation">:</span><span class="token number">2181</span>
+    <span class="token key atrule">volumes</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token string">"./zoo3/data:/data"</span>
+      <span class="token punctuation">-</span> <span class="token string">"./zoo3/datalog:/datalog"</span>
+    <span class="token key atrule">environment</span><span class="token punctuation">:</span>
+      <span class="token key atrule">ZOO_MY_ID</span><span class="token punctuation">:</span> <span class="token number">3</span>
+      <span class="token key atrule">ZOO_SERVERS</span><span class="token punctuation">:</span> server.1=zoo1<span class="token punctuation">:</span>2888<span class="token punctuation">:</span>3888;2181 server.2=zoo2<span class="token punctuation">:</span>2888<span class="token punctuation">:</span>3888;2181 server.3=zoo3<span class="token punctuation">:</span>2888<span class="token punctuation">:</span>3888;2181
+</code></pre>
+<p>通过<code>docker-compose up -d</code>命令启动 ZooKeeper 集群，可以进入容器查看集群状态。可以参考这篇文章：<a target="_blank" rel="noopener" href="https://zysite.top/2020/10/09/zookeeper-docker-compose-install/">docker-compose安装ZooKeeper集群</a></p>
+<h2 id="Kafka-Compose-配置文件"><a href="#Kafka-Compose-配置文件" class="headerlink" title="Kafka Compose 配置文件"></a>Kafka Compose 配置文件</h2><p>创建一个 docker-compose.yml 文件，内容如下：</p>
+<pre class=" language-yaml"><code class="language-yaml"><span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token string">'3.1'</span>
+
+<span class="token key atrule">networks</span><span class="token punctuation">:</span>
+  <span class="token key atrule">default</span><span class="token punctuation">:</span>
+    <span class="token key atrule">external</span><span class="token punctuation">:</span>
+      <span class="token key atrule">name</span><span class="token punctuation">:</span> zookeeper_network
+<span class="token key atrule">services</span><span class="token punctuation">:</span>
+  <span class="token key atrule">kafka1</span><span class="token punctuation">:</span>
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> wurstmeister/kafka
+    <span class="token key atrule">restart</span><span class="token punctuation">:</span> unless<span class="token punctuation">-</span>stopped
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> kafka1
+    <span class="token key atrule">hostname</span><span class="token punctuation">:</span> kafka1
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token string">"9092:9092"</span>
+    <span class="token key atrule">external_links</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> zoo1
+      <span class="token punctuation">-</span> zoo2
+      <span class="token punctuation">-</span> zoo3
+    <span class="token key atrule">environment</span><span class="token punctuation">:</span>
+      <span class="token key atrule">KAFKA_BROKER_ID</span><span class="token punctuation">:</span> <span class="token number">1</span>
+      <span class="token key atrule">KAFKA_LISTENERS</span><span class="token punctuation">:</span> PLAINTEXT<span class="token punctuation">:</span>//0.0.0.0<span class="token punctuation">:</span><span class="token number">9092</span>
+      <span class="token key atrule">KAFKA_ADVERTISED_LISTENERS</span><span class="token punctuation">:</span> PLAINTEXT<span class="token punctuation">:</span>//192.168.75.1<span class="token punctuation">:</span><span class="token number">9092    </span><span class="token comment" spellcheck="true">## 宿主机IP</span>
+      <span class="token key atrule">KAFKA_ADVERTISED_HOST_NAME</span><span class="token punctuation">:</span> kafka1
+      <span class="token key atrule">KAFKA_ADVERTISED_PORT</span><span class="token punctuation">:</span> <span class="token number">9092</span>
+      <span class="token key atrule">KAFKA_ZOOKEEPER_CONNECT</span><span class="token punctuation">:</span> <span class="token string">"zoo1:2181,zoo2:2181,zoo3:2181"</span>
+    <span class="token key atrule">volumes</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token string">"./kafka/kafka1/data/:/kafka"</span>
+
+
+  <span class="token key atrule">kafka2</span><span class="token punctuation">:</span>
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> wurstmeister/kafka
+    <span class="token key atrule">restart</span><span class="token punctuation">:</span> unless<span class="token punctuation">-</span>stopped
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> kafka2
+    <span class="token key atrule">hostname</span><span class="token punctuation">:</span> kafka2
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token string">"9093:9092"</span>
+    <span class="token key atrule">external_links</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> zoo1
+      <span class="token punctuation">-</span> zoo2
+      <span class="token punctuation">-</span> zoo3
+    <span class="token key atrule">environment</span><span class="token punctuation">:</span>
+      <span class="token key atrule">KAFKA_BROKER_ID</span><span class="token punctuation">:</span> <span class="token number">2</span>
+      <span class="token key atrule">KAFKA_LISTENERS</span><span class="token punctuation">:</span> PLAINTEXT<span class="token punctuation">:</span>//0.0.0.0<span class="token punctuation">:</span><span class="token number">9092</span>
+      <span class="token key atrule">KAFKA_ADVERTISED_LISTENERS</span><span class="token punctuation">:</span> PLAINTEXT<span class="token punctuation">:</span>//192.168.75.1<span class="token punctuation">:</span><span class="token number">9093    </span><span class="token comment" spellcheck="true">## 宿主机IP</span>
+      <span class="token key atrule">KAFKA_ADVERTISED_HOST_NAME</span><span class="token punctuation">:</span> kafka2
+      <span class="token key atrule">KAFKA_ADVERTISED_PORT</span><span class="token punctuation">:</span> <span class="token number">9093</span>
+      <span class="token key atrule">KAFKA_ZOOKEEPER_CONNECT</span><span class="token punctuation">:</span> <span class="token string">"zoo1:2181,zoo2:2181,zoo3:2181"</span>
+    <span class="token key atrule">volumes</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token string">"./kafka/kafka2/data/:/kafka"</span>
+
+  <span class="token key atrule">kafka3</span><span class="token punctuation">:</span>
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> wurstmeister/kafka
+    <span class="token key atrule">restart</span><span class="token punctuation">:</span> unless<span class="token punctuation">-</span>stopped
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> kafka3
+    <span class="token key atrule">hostname</span><span class="token punctuation">:</span> kafka3
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token string">"9094:9092"</span>
+    <span class="token key atrule">external_links</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> zoo1
+      <span class="token punctuation">-</span> zoo2
+      <span class="token punctuation">-</span> zoo3
+    <span class="token key atrule">environment</span><span class="token punctuation">:</span>
+      <span class="token key atrule">KAFKA_BROKER_ID</span><span class="token punctuation">:</span> <span class="token number">3</span>
+      <span class="token key atrule">KAFKA_LISTENERS</span><span class="token punctuation">:</span> PLAINTEXT<span class="token punctuation">:</span>//0.0.0.0<span class="token punctuation">:</span><span class="token number">9092</span>
+      <span class="token key atrule">KAFKA_ADVERTISED_LISTENERS</span><span class="token punctuation">:</span> PLAINTEXT<span class="token punctuation">:</span>//192.168.75.1<span class="token punctuation">:</span><span class="token number">9094   </span><span class="token comment" spellcheck="true">## 宿主机IP</span>
+      <span class="token key atrule">KAFKA_ADVERTISED_HOST_NAME</span><span class="token punctuation">:</span> kafka3
+      <span class="token key atrule">KAFKA_ADVERTISED_PORT</span><span class="token punctuation">:</span> <span class="token number">9094</span>
+      <span class="token key atrule">KAFKA_ZOOKEEPER_CONNECT</span><span class="token punctuation">:</span> <span class="token string">"zoo1:2181,zoo2:2181,zoo3:2181"</span>
+    <span class="token key atrule">volumes</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token string">"./kafka/kafka3/data/:/kafka"</span>
+
+  <span class="token key atrule">kafka-manager</span><span class="token punctuation">:</span> <span class="token comment" spellcheck="true"># Kafka 图形管理界面</span>
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> sheepkiller/kafka<span class="token punctuation">-</span>manager<span class="token punctuation">:</span>latest
+    <span class="token key atrule">restart</span><span class="token punctuation">:</span> unless<span class="token punctuation">-</span>stopped
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> kafka<span class="token punctuation">-</span>manager
+    <span class="token key atrule">hostname</span><span class="token punctuation">:</span> kafka<span class="token punctuation">-</span>manager
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token string">"9000:9000"</span>
+    <span class="token key atrule">links</span><span class="token punctuation">:</span>            <span class="token comment" spellcheck="true"># 连接本compose文件创建的container</span>
+      <span class="token punctuation">-</span> kafka1
+      <span class="token punctuation">-</span> kafka2
+      <span class="token punctuation">-</span> kafka3
+    <span class="token key atrule">external_links</span><span class="token punctuation">:</span>   <span class="token comment" spellcheck="true"># 连接外部compose文件创建的container</span>
+      <span class="token punctuation">-</span> zoo1
+      <span class="token punctuation">-</span> zoo2
+      <span class="token punctuation">-</span> zoo3
+    <span class="token key atrule">environment</span><span class="token punctuation">:</span>
+      <span class="token key atrule">ZK_HOSTS</span><span class="token punctuation">:</span> zoo1<span class="token punctuation">:</span><span class="token number">2181</span><span class="token punctuation">,</span>zoo2<span class="token punctuation">:</span><span class="token number">2181</span><span class="token punctuation">,</span>zoo3<span class="token punctuation">:</span><span class="token number">2181</span>
+      <span class="token key atrule">KAFKA_BROKERS</span><span class="token punctuation">:</span> kafka1<span class="token punctuation">:</span><span class="token number">9092</span><span class="token punctuation">,</span>kafka2<span class="token punctuation">:</span><span class="token number">9093</span><span class="token punctuation">,</span>kafka3<span class="token punctuation">:</span><span class="token number">9094</span>
+</code></pre>
+<p>在启动了 ZooKeeper 集群后再启动 Kafka 集群。之后可以通过访问 <a target="_blank" rel="noopener" href="http://localhost:9000/">http://localhost:9000</a> 访问 kafka-manager。</p>
+<p><a target="_blank" rel="noopener" href="https://zysite.top/archives/kafka-docker-compose-install#FKyDjfDm">前提</a><a target="_blank" rel="noopener" href="https://zysite.top/archives/kafka-docker-compose-install#TAHJKpxY">ZooKeeper Compose 配置文件</a><a target="_blank" rel="noopener" href="https://zysite.top/archives/kafka-docker-compose-install#nXNhTPmM">Kafka Compose 配置文件</a></p>
+<blockquote>
+<p><strong>Copyright:</strong> 采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by/4.0/">知识共享署名4.0</a> 国际许可协议进行许可</p>
+<p><strong>Links:</strong> <a target="_blank" rel="noopener" href="https://zysite.top/archives/kafka-docker-compose-install">https://zysite.top/archives/kafka-docker-compose-install</a></p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://zysite.top/tags/docker"># Docker</a><a target="_blank" rel="noopener" href="https://zysite.top/tags/kafka"># Kafka</a></p>
+
                 
             </div>
             <hr/>
@@ -511,7 +665,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://SuXiaoNan2021.github.io/2021/092420925.html">https://SuXiaoNan2021.github.io/2021/092420925.html</a>
+                    <a href="https://SuXiaoNan2021.github.io/2021/09254.html">https://SuXiaoNan2021.github.io/2021/09254.html</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -716,18 +870,17 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;本篇
-            </div>
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2021/092420925.html">
+                <a href="/2021/09257.html">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="docker按照">
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="">
                         
-                        <span class="card-title">docker按照</span>
+                        <span class="card-title"></span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -737,9 +890,9 @@
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-09-24
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-09-25
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -748,7 +901,6 @@
                         </span>
                     </div>
                 </div>
-
                 
             </div>
         </div>
@@ -759,13 +911,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/092416108.html">
+                <a href="/2021/09252.html">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="Hello World">
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="">
                         
-                        <span class="card-title">Hello World</span>
+                        <span class="card-title"></span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -776,7 +928,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-09-24
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-09-25
                             </span>
                         <span class="publish-author">
                             
@@ -985,7 +1137,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">73</span>&nbsp;字
+                class="white-color">27.8k</span>&nbsp;字
             
             
             
